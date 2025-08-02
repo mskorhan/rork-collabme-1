@@ -1,13 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, FlatList, Text, TouchableOpacity, ScrollView, SafeAreaView } from 'react-native';
 import { Stack, useFocusEffect, router } from 'expo-router';
 import { colors } from '@/constants/colors';
 import NotificationItem from '@/components/NotificationItem';
 import { mockUsers } from '@/mocks/users';
-import { UserProfile, Notification } from '@/types';
+import { Notification } from '@/types';
 import { ThumbsUp, MessageCircle, UserPlus, Handshake, Briefcase, Mail, Hash } from 'lucide-react-native';
 import { useNotificationStore } from '@/store/notificationStore';
-import { useCallback } from 'react';
 
 type NotificationTab = 'all' | 'likes' | 'comments' | 'follows' | 'collabs' | 'jobs' | 'messages';
 
@@ -24,12 +23,12 @@ export default function ActivityScreen() {
       }, 500);
       
       return () => clearTimeout(timer);
-    }, [])
+    }, [markAllAsRead])
   );
   
   useEffect(() => {
     loadNotifications();
-  }, []);
+  }, [loadNotifications]);
 
   const handleNotificationAction = (notificationId: string, action: 'accept' | 'deny' | 'follow_back') => {
     const notification = notifications.find(n => n.id === notificationId);
@@ -273,7 +272,7 @@ export default function ActivityScreen() {
               <Text style={styles.emptyText}>
                 No {activeTab === 'all' ? '' : activeTab} notifications
               </Text>
-              <Text style={styles.emptySubtext}>You're all caught up!</Text>
+              <Text style={styles.emptySubtext}>You&apos;re all caught up!</Text>
             </View>
           }
         />

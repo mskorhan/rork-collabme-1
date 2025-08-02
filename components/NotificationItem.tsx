@@ -2,7 +2,8 @@ import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Notification, UserProfile } from '@/types';
 import { colors } from '@/constants/colors';
-import { ThumbsUp, MessageCircle, UserPlus, Handshake, Briefcase, Check, X, Mail } from 'lucide-react-native';
+import { ThumbsUp, MessageCircle, UserPlus, Handshake, Briefcase, X, Mail } from 'lucide-react-native';
+import { formatTime } from '@/utils/formatTime';
 
 interface NotificationItemProps {
   notification: Notification;
@@ -19,32 +20,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
   onAction,
   isProcessing = false,
 }) => {
-  // Format the time
-  const formatTime = (timestamp: number) => {
-    const now = new Date();
-    const notificationDate = new Date(timestamp);
-    
-    // Calculate the difference in milliseconds
-    const diffMs = now.getTime() - notificationDate.getTime();
-    
-    // Convert to minutes, hours, days
-    const diffMinutes = Math.floor(diffMs / (1000 * 60));
-    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-    
-    if (diffMinutes < 60) {
-      return `${diffMinutes}m ago`;
-    } else if (diffHours < 24) {
-      return `${diffHours}h ago`;
-    } else if (diffDays < 7) {
-      return `${diffDays}d ago`;
-    } else {
-      return notificationDate.toLocaleDateString('en-US', { 
-        month: 'short', 
-        day: 'numeric' 
-      });
-    }
-  };
+
   
   // Use a placeholder image if no profile image is available
   const profileImage = user.profileImage || user.avatar || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60';
