@@ -222,9 +222,9 @@ export default function ActivityScreen() {
                     // Navigate to post detail - use relatedPostId if available
                     if (item.relatedPostId) {
                       // For now, navigate to home tab since we don't have post detail screen
-                      router.push('/(tabs)/');
+                      router.push('/(tabs)/' as any);
                     } else if (item.relatedId) {
-                      router.push('/(tabs)/');
+                      router.push('/(tabs)/' as any);
                     }
                     break;
                   case 'follow':
@@ -253,7 +253,7 @@ export default function ActivityScreen() {
                   case 'tag':
                     // Navigate to the post where user was mentioned/tagged
                     if (item.relatedPostId) {
-                      router.push('/(tabs)/');
+                      router.push('/(tabs)/' as any);
                     }
                     break;
                 }
