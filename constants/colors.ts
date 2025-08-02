@@ -1,0 +1,26 @@
+export const colors = {
+  primary: '#007AFF',
+  secondary: '#5856D6',
+  success: '#34C759',
+  error: '#FF3B30',
+  warning: '#FF9500',
+  verified: '#1DA1F2',
+  white: '#FFFFFF',
+  black: '#000000',
+  text: '#1C1C1E',
+  gray: {
+    25: '#FCFCFD',
+    50: '#FAFAFA',
+    100: '#F2F2F7',
+    200: '#E5E5EA',
+    300: '#D1D1D6',
+    400: '#C7C7CC',
+    500: '#AEAEB2',
+    600: '#8E8E93',
+    700: '#6D6D70',
+  },
+  red: {
+    100: '#FEE2E2',
+    600: '#DC2626',
+  },
+};
