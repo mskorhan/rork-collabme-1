@@ -54,7 +54,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         return (
           <View style={styles.actionButtons}>
             <TouchableOpacity
-              style={[styles.actionButton, styles.acceptButton, isProcessing && { opacity: 0.5 }]}
+              style={[styles.actionButton, styles.acceptButton, isProcessing && styles.disabledButton]}
               onPress={(e) => {
                 if (isProcessing) return;
                 e.stopPropagation(); // Prevent triggering parent onPress
@@ -66,7 +66,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
               <Handshake size={14} color={colors.white} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.actionButton, styles.denyButton, isProcessing && { opacity: 0.5 }]}
+              style={[styles.actionButton, styles.denyButton, isProcessing && styles.disabledButton]}
               onPress={(e) => {
                 if (isProcessing) return;
                 e.stopPropagation(); // Prevent triggering parent onPress
@@ -96,7 +96,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         return (
           <View style={styles.actionButtons}>
             <TouchableOpacity
-              style={[styles.actionButton, styles.acceptButton, isProcessing && { opacity: 0.5 }]}
+              style={[styles.actionButton, styles.acceptButton, isProcessing && styles.disabledButton]}
               onPress={(e) => {
                 if (isProcessing) return;
                 e.stopPropagation(); // Prevent triggering parent onPress
@@ -108,7 +108,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
               <Handshake size={14} color={colors.white} />
             </TouchableOpacity>
             <TouchableOpacity
-              style={[styles.actionButton, styles.denyButton, isProcessing && { opacity: 0.5 }]}
+              style={[styles.actionButton, styles.denyButton, isProcessing && styles.disabledButton]}
               onPress={(e) => {
                 if (isProcessing) return;
                 e.stopPropagation(); // Prevent triggering parent onPress
@@ -261,6 +261,9 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 11,
     fontWeight: '600',
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
 });
 

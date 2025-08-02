@@ -66,15 +66,17 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    gap: 8,
+    justifyContent: 'space-around',
+    flexGrow: 1,
   },
   tab: {
-    paddingHorizontal: 16,
+    paddingHorizontal: 12,
     paddingVertical: 10,
     borderRadius: 20,
     backgroundColor: colors.gray[100],
-    marginRight: 8,
-    minWidth: 80,
+    marginHorizontal: 4,
+    flex: 1,
+    minWidth: 70,
     alignItems: 'center',
     justifyContent: 'center',
   },

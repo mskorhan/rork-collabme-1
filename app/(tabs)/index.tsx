@@ -163,7 +163,7 @@ export default function HomeScreen() {
   };
 
   const handleMessagesPress = () => {
-    router.push('/messages/index');
+    router.push('/messages/');
   };
 
   const handleFullScreen = (mediaUrl: string, type: 'photo' | 'video') => {

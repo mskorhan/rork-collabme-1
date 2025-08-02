@@ -76,7 +76,7 @@ class ErrorBoundary extends Component<Props, State> {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: theme.colors.background,
+    backgroundColor: colors.white,
     justifyContent: 'center',
     alignItems: 'center',
     padding: theme.spacing.xl,
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: theme.fontSize.md,
-    color: theme.colors.textSecondary,
+    color: colors.gray[600],
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: theme.spacing.xl,
@@ -117,12 +117,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: theme.fontSize.sm,
-    color: theme.colors.textSecondary,
+    color: colors.gray[600],
     marginBottom: theme.spacing.sm,
   },
   errorStack: {
     fontSize: theme.fontSize.xs,
-    color: theme.colors.textTertiary,
+    color: colors.gray[500],
     fontFamily: 'monospace',
   },
   retryButton: {
