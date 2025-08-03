@@ -66,7 +66,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
   const surpriseScale = useSharedValue(1);
   
   const textInputRef = useRef<TextInput>(null);
-  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   
   // Get unique users with stories
   const usersWithStories = getUsersWithStories();
@@ -108,7 +108,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
       });
     }, 100);
     
-    timerRef.current = timer as ReturnType<typeof setInterval>;
+    timerRef.current = timer;
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
