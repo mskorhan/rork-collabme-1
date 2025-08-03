@@ -17,7 +17,7 @@ export default function TabLayout() {
   
   useEffect(() => {
     loadNotifications();
-  }, []);
+  }, [loadNotifications]);
 
   return (
     <Tabs
