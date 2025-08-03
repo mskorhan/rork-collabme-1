@@ -66,7 +66,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
   const surpriseScale = useSharedValue(1);
   
   const textInputRef = useRef<TextInput>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<number | null>(null);
   
   // Get unique users with stories
   const usersWithStories = getUsersWithStories();
