@@ -66,7 +66,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
   const surpriseScale = useSharedValue(1);
   
   const textInputRef = useRef<TextInput>(null);
-  const timerRef = useRef<number | null>(null);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   
   // Get unique users with stories
   const usersWithStories = getUsersWithStories();
@@ -112,7 +112,6 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
-        timerRef.current = null;
       }
     };
   }, [visible, currentUserIndex, currentStoryIndex, isPaused]);
@@ -202,44 +201,37 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
     Alert.alert('Reaction Sent!', `You reacted with ${emoji} to ${currentUser?.name}'s story`);
   };
   
-  // Always define animated styles (for React Hooks rules)
-  const progressStyle = useAnimatedStyle(() => ({
-    width: Platform.OS !== 'web' ? `${progressWidth.value}%` : `${progress}%`,
-  }));
+  const progressStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+    width: `${progressWidth.value}%`,
+  })) : { width: `${progress}%` };
   
-  const replyBoxStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: Platform.OS !== 'web' ? replyBoxTranslateY.value : (isReplying ? 0 : 200) }],
-  }));
+  const replyBoxStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+    transform: [{ translateY: replyBoxTranslateY.value }],
+  })) : { transform: [{ translateY: isReplying ? 0 : 200 }] };
   
-  const heartAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: Platform.OS !== 'web' ? heartScale.value : 1 }],
-    opacity: Platform.OS !== 'web' ? 1 : 0,
-  }));
+  const heartAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+    transform: [{ scale: heartScale.value }],
+  })) : {};
   
-  const thumbsUpAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: Platform.OS !== 'web' ? thumbsUpScale.value : 1 }],
-    opacity: Platform.OS !== 'web' ? 1 : 0,
-  }));
+  const thumbsUpAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+    transform: [{ scale: thumbsUpScale.value }],
+  })) : {};
   
-  const laughAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: Platform.OS !== 'web' ? laughScale.value : 1 }],
-    opacity: Platform.OS !== 'web' ? 1 : 0,
-  }));
+  const laughAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+    transform: [{ scale: laughScale.value }],
+  })) : {};
   
-  const angryAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: Platform.OS !== 'web' ? angryScale.value : 1 }],
-    opacity: Platform.OS !== 'web' ? 1 : 0,
-  }));
+  const angryAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+    transform: [{ scale: angryScale.value }],
+  })) : {};
   
-  const sadAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: Platform.OS !== 'web' ? sadScale.value : 1 }],
-    opacity: Platform.OS !== 'web' ? 1 : 0,
-  }));
+  const sadAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+    transform: [{ scale: sadScale.value }],
+  })) : {};
   
-  const surpriseAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: Platform.OS !== 'web' ? surpriseScale.value : 1 }],
-    opacity: Platform.OS !== 'web' ? 1 : 0,
-  }));
+  const surpriseAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+    transform: [{ scale: surpriseScale.value }],
+  })) : {};
   
   if (!visible || !currentStory || !currentUser) {
     return null;
