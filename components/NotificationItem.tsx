@@ -245,6 +245,9 @@ const styles = StyleSheet.create({
   denyButton: {
     backgroundColor: colors.error,
   },
+  disabledButton: {
+    opacity: 0.5,
+  },
   followBackButton: {
     backgroundColor: colors.primary,
     paddingHorizontal: 12,
