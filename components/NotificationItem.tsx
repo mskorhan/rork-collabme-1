@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
     borderBottomColor: colors.gray[100],
     alignItems: 'flex-start',
     backgroundColor: colors.white,
-    minHeight: 'auto',
+
   },
   unreadContainer: {
     backgroundColor: colors.gray[25],
