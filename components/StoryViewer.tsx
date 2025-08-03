@@ -108,7 +108,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
       });
     }, 100);
     
-    timerRef.current = timer as NodeJS.Timeout;
+    timerRef.current = timer as unknown as NodeJS.Timeout;
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
