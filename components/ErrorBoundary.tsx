@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: theme.fontSize.md,
-    color: colors.gray[600],
+    color: theme.colors.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: theme.spacing.xl,
@@ -117,12 +117,12 @@ const styles = StyleSheet.create({
   },
   errorText: {
     fontSize: theme.fontSize.sm,
-    color: colors.gray[600],
+    color: theme.colors.textSecondary,
     marginBottom: theme.spacing.sm,
   },
   errorStack: {
     fontSize: theme.fontSize.xs,
-    color: colors.gray[500],
+    color: theme.colors.textTertiary,
     fontFamily: 'monospace',
   },
   retryButton: {
