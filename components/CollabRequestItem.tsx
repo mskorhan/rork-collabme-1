@@ -60,7 +60,7 @@ export default function CollabRequestItem({
     <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.header}>
         <View style={styles.userInfo}>
-          <Image source={{ uri: fromUser.avatar }} style={styles.avatar} />
+          <Image source={{ uri: fromUser.avatar || fromUser.profileImage || 'https://via.placeholder.com/40' }} style={styles.avatar} />
           <View style={styles.userDetails}>
             <Text style={styles.userName}>{fromUser.name}</Text>
             <Text style={styles.timeAgo}>{formatTimeAgo(request.createdAt)}</Text>
