@@ -25,41 +25,44 @@ const StarRating: React.FC<StarRatingProps> = ({
 
   return (
     <View style={[styles.container, style]}>
-      {/* Full stars */}
-      {Array(fullStars).fill(0).map((_, i) => (
-        <Star 
-          key={`full-${i}`} 
-          size={size} 
-          color={colors.primary} 
-          fill={colors.primary} 
-        />
-      ))}
-      
-      {/* Partial star */}
-      {partialStar > 0 && (
-        <View style={styles.partialStarContainer}>
+      <View style={styles.starsContainer}>
+        {/* Full stars */}
+        {Array(fullStars).fill(0).map((_, i) => (
           <Star 
+            key={`full-${i}`} 
             size={size} 
             color={colors.primary} 
             fill={colors.primary} 
-            style={[styles.partialStar, { width: `${partialStar * 100}%` }]} 
           />
+        ))}
+        
+        {/* Partial star */}
+        {partialStar > 0 && (
+          <View style={[styles.partialStarContainer, { width: size, height: size }]}>
+            <Star 
+              size={size} 
+              color={colors.gray[300]} 
+              style={styles.basePartialStar} 
+            />
+            <View style={[styles.partialStarOverlay, { width: `${partialStar * 100}%` }]}>
+              <Star 
+                size={size} 
+                color={colors.primary} 
+                fill={colors.primary} 
+              />
+            </View>
+          </View>
+        )}
+        
+        {/* Empty stars */}
+        {Array(emptyStars).fill(0).map((_, i) => (
           <Star 
+            key={`empty-${i}`} 
             size={size} 
-            color={colors.primary} 
-            style={styles.emptyStar} 
+            color={colors.gray[300]} 
           />
-        </View>
-      )}
-      
-      {/* Empty stars */}
-      {Array(emptyStars).fill(0).map((_, i) => (
-        <Star 
-          key={`empty-${i}`} 
-          size={size} 
-          color={colors.primary} 
-        />
-      ))}
+        ))}
+      </View>
       
       {/* Rating value */}
       {showValue && (
@@ -76,23 +79,27 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  partialStarContainer: {
-    position: 'relative',
-    justifyContent: 'center',
+  starsContainer: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  partialStar: {
-    position: 'absolute',
-    left: 0,
+  partialStarContainer: {
+    position: 'relative',
     overflow: 'hidden',
-    zIndex: 1,
   },
-  emptyStar: {
+  basePartialStar: {
     position: 'absolute',
     left: 0,
+    top: 0,
+  },
+  partialStarOverlay: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    overflow: 'hidden',
   },
   ratingText: {
-    marginLeft: 4,
+    marginLeft: 6,
     fontSize: 14,
     fontWeight: '600',
     color: colors.text,
