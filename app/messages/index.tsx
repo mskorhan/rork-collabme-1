@@ -40,7 +40,7 @@ export default function MessagesScreen() {
 
   const handleBackPress = () => {
     // Always go back to the home tab
-    router.replace('/(tabs)/');
+    router.replace('/');
   };
 
   const renderTabButton = (tab: TabType, title: string) => (
