@@ -4,8 +4,10 @@ import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { ArrowLeft } from 'lucide-react-native';
 import ConversationItem from '@/components/ConversationItem';
+import CollabRequestItem from '@/components/CollabRequestItem';
 import { mockConversations, mockMessages } from '@/mocks/conversations';
 import { mockUsers } from '@/mocks/users';
+import { mockCollabRequests, CollabRequest } from '@/mocks/collabRequests';
 import { UserProfile } from '@/types';
 
 type TabType = 'messages' | 'collab';
@@ -80,29 +82,76 @@ export default function MessagesScreen() {
     </View>
   );
 
+  const handleAcceptCollab = (requestId: string) => {
+    console.log('Accepting collab request:', requestId);
+    // TODO: Implement API call to accept collaboration
+  };
+
+  const handleDenyCollab = (requestId: string) => {
+    console.log('Denying collab request:', requestId);
+    // TODO: Implement API call to deny collaboration
+  };
+
+  const handleCollabPress = (request: CollabRequest) => {
+    console.log('Opening collab request:', request.id);
+    // TODO: Navigate to collab request detail page
+  };
+
+  const pendingRequests = mockCollabRequests.filter(req => req.status === 'pending');
+  const deniedRequests = mockCollabRequests.filter(req => req.status === 'denied');
+
   const renderCollabTab = () => (
     <View style={styles.collabTabContainer}>
-      <View style={styles.collabSection}>
-        <Text style={styles.sectionTitle}>Pending Requests</Text>
-        <View style={styles.emptyContainer}>
-          <View style={styles.emptyIconContainer}>
-            <Text style={styles.emptyIcon}>🤝</Text>
+      <FlatList
+        data={[
+          { type: 'section', title: 'Pending Requests', requests: pendingRequests },
+          { type: 'section', title: 'Denied Requests', requests: deniedRequests },
+        ]}
+        keyExtractor={(item, index) => `section-${index}`}
+        renderItem={({ item }) => (
+          <View style={styles.collabSection}>
+            <Text style={styles.sectionTitle}>{item.title}</Text>
+            {item.requests.length > 0 ? (
+              <FlatList
+                data={item.requests}
+                keyExtractor={(request) => request.id}
+                renderItem={({ item: request }) => {
+                  const fromUser = mockUsers.find(user => user.id === request.fromUserId) || mockUsers[0];
+                  return (
+                    <CollabRequestItem
+                      request={request}
+                      fromUser={fromUser}
+                      onAccept={handleAcceptCollab}
+                      onDeny={handleDenyCollab}
+                      onPress={() => handleCollabPress(request)}
+                    />
+                  );
+                }}
+                scrollEnabled={false}
+              />
+            ) : (
+              <View style={styles.emptyContainer}>
+                <View style={styles.emptyIconContainer}>
+                  <Text style={styles.emptyIcon}>
+                    {item.title.includes('Pending') ? '🤝' : '❌'}
+                  </Text>
+                </View>
+                <Text style={styles.emptyText}>
+                  No {item.title.toLowerCase()}
+                </Text>
+                <Text style={styles.emptySubtext}>
+                  {item.title.includes('Pending') 
+                    ? 'New collaboration requests will appear here'
+                    : 'Denied collaboration requests will appear here'
+                  }
+                </Text>
+              </View>
+            )}
           </View>
-          <Text style={styles.emptyText}>No pending collab requests</Text>
-          <Text style={styles.emptySubtext}>New collaboration requests will appear here</Text>
-        </View>
-      </View>
-      
-      <View style={styles.collabSection}>
-        <Text style={styles.sectionTitle}>Denied Requests</Text>
-        <View style={styles.emptyContainer}>
-          <View style={styles.emptyIconContainer}>
-            <Text style={styles.emptyIcon}>❌</Text>
-          </View>
-          <Text style={styles.emptyText}>No denied requests</Text>
-          <Text style={styles.emptySubtext}>Denied collaboration requests will appear here</Text>
-        </View>
-      </View>
+        )}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContent}
+      />
     </View>
   );
 

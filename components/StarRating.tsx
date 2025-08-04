@@ -82,6 +82,7 @@ const styles = StyleSheet.create({
   starsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginRight: 4,
   },
   partialStarContainer: {
     position: 'relative',

@@ -127,12 +127,6 @@ export default function TabLayout() {
       
       {/* Hidden tabs - these exist as files but shouldn't show in tab bar */}
       <Tabs.Screen
-        name="messages"
-        options={{
-          href: null, // Hide from tab bar
-        }}
-      />
-      <Tabs.Screen
         name="upload"
         options={{
           href: null, // Hide from tab bar
