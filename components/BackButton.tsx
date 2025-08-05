@@ -6,6 +6,7 @@ import { colors } from '@/constants/colors';
 
 interface BackButtonProps {
   onPress?: () => void;
+  fallbackUrl?: string;
   color?: string;
   size?: number;
   style?: any;
@@ -13,6 +14,7 @@ interface BackButtonProps {
 
 export default function BackButton({ 
   onPress, 
+  fallbackUrl = '/',
   color = colors.text, 
   size = 24, 
   style 
@@ -26,18 +28,13 @@ export default function BackButton({
         if (window.history.length > 1) {
           router.back();
         } else {
-          router.replace('/');
+          router.push(fallbackUrl);
         }
       } else {
         router.back();
       }
     }
   };
-
-  // On web, only show if there's history to go back to
-  if (Platform.OS === 'web' && window.history.length <= 1) {
-    return null;
-  }
 
   return (
     <TouchableOpacity 

@@ -169,7 +169,8 @@ const styles = StyleSheet.create({
   },
   starsContainer: {
     flexDirection: 'row',
-    gap: 4,
+    alignItems: 'center',
+    gap: 2,
     marginBottom: 8,
   },
   reviewCount: {
@@ -215,7 +216,7 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 14,
     color: colors.text,
-    marginLeft: 4,
+    marginLeft: 8,
     fontWeight: '500',
   },
   reviewDate: {

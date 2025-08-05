@@ -37,9 +37,9 @@ export default function CollabRequestItem({
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'accepted':
-        return colors.success;
+        return colors.green[500];
       case 'denied':
-        return colors.error;
+        return colors.red[500];
       default:
         return colors.gray[500];
     }
@@ -60,7 +60,7 @@ export default function CollabRequestItem({
     <TouchableOpacity style={styles.container} onPress={onPress} activeOpacity={0.7}>
       <View style={styles.header}>
         <View style={styles.userInfo}>
-          <Image source={{ uri: fromUser.profileImage || 'https://via.placeholder.com/40' }} style={styles.avatar} />
+          <Image source={{ uri: fromUser.avatar || 'https://via.placeholder.com/40' }} style={styles.avatar} />
           <View style={styles.userDetails}>
             <Text style={styles.userName}>{fromUser.name}</Text>
             <Text style={styles.timeAgo}>{formatTimeAgo(request.createdAt)}</Text>

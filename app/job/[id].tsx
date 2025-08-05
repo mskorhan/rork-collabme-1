@@ -4,9 +4,9 @@ import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { ArrowLeft, MapPin, Clock, DollarSign, Users, Calendar, Building2, CheckCircle } from 'lucide-react-native';
 import Button from '@/components/Button';
+import BackButton from '@/components/BackButton';
 import { mockJobs } from '@/mocks/jobs';
 import { mockCompanies } from '@/mocks/users';
-import { Job, CompanyProfile } from '@/types';
 
 export default function JobDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -20,14 +20,16 @@ export default function JobDetailScreen() {
       <View style={styles.container}>
         <Stack.Screen
           options={{
-            title: 'Job Not Found',
-            headerLeft: () => (
-              <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-                <ArrowLeft size={24} color={colors.text} />
-              </TouchableOpacity>
-            ),
+            headerShown: false,
           }}
         />
+        
+        {/* Custom Header with Back Button */}
+        <View style={styles.customHeader}>
+          <BackButton fallbackUrl="/(tabs)/jobs" />
+          <Text style={styles.customHeaderTitle}>Job Not Found</Text>
+          <View style={styles.headerSpacer} />
+        </View>
         <View style={styles.errorContainer}>
           <Text style={styles.errorText}>Job not found</Text>
           <Button
@@ -73,14 +75,16 @@ export default function JobDetailScreen() {
     <View style={styles.container}>
       <Stack.Screen
         options={{
-          title: job.title,
-          headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-              <ArrowLeft size={24} color={colors.text} />
-            </TouchableOpacity>
-          ),
+          headerShown: false,
         }}
       />
+      
+      {/* Custom Header with Back Button */}
+      <View style={styles.customHeader}>
+        <BackButton fallbackUrl="/(tabs)/jobs" />
+        <Text style={styles.customHeaderTitle}>{job.title}</Text>
+        <View style={styles.headerSpacer} />
+      </View>
       
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         {/* Company Header */}
@@ -323,5 +327,25 @@ const styles = StyleSheet.create({
   },
   appliedButton: {
     backgroundColor: colors.gray[300],
+  },
+  customHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 16,
+    paddingTop: 50,
+    paddingBottom: 10,
+    backgroundColor: colors.white,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.gray[100],
+  },
+  customHeaderTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text,
+    flex: 1,
+    textAlign: 'center',
+  },
+  headerSpacer: {
+    width: 40,
   },
 });
