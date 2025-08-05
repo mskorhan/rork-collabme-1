@@ -59,6 +59,32 @@ const PostCard: React.FC<PostCardProps> = ({
   const heartOpacity = useSharedValue(0);
   const confettiScale = useSharedValue(0);
   
+  // Handle double tap like with enhanced animation and confetti effect
+  const handleDoubleTapLike = () => {
+    if (!isLiked) {
+      onLike();
+    }
+    
+    // Show floating like animation with confetti
+    setShowLikeAnimation(true);
+    
+    // Main double-tap animation
+    doubleTapScale.value = withSequence(
+      withSpring(0, { duration: 0 }),
+      withSpring(1.8, { duration: 400 }),
+      withTiming(0, { duration: 300 }, () => {
+        runOnJS(setShowLikeAnimation)(false);
+      })
+    );
+    
+    // Confetti burst effect
+    confettiScale.value = withSequence(
+      withTiming(0, { duration: 0 }),
+      withSpring(2, { duration: 500 }),
+      withTiming(0, { duration: 200 })
+    );
+  };
+  
   // Double tap gesture - always initialize
   const doubleTap = Gesture.Tap()
     .numberOfTaps(2)
@@ -194,31 +220,7 @@ const PostCard: React.FC<PostCardProps> = ({
     onLike();
   };
 
-  // Handle double tap like with enhanced animation and confetti effect
-  const handleDoubleTapLike = () => {
-    if (!isLiked) {
-      onLike();
-    }
-    
-    // Show floating like animation with confetti
-    setShowLikeAnimation(true);
-    
-    // Main double-tap animation
-    doubleTapScale.value = withSequence(
-      withSpring(0, { duration: 0 }),
-      withSpring(1.8, { duration: 400 }),
-      withTiming(0, { duration: 300 }, () => {
-        runOnJS(setShowLikeAnimation)(false);
-      })
-    );
-    
-    // Confetti burst effect
-    confettiScale.value = withSequence(
-      withTiming(0, { duration: 0 }),
-      withSpring(2, { duration: 500 }),
-      withTiming(0, { duration: 200 })
-    );
-  };
+
 
   // Handle hashtag and mention clicks
   const handleHashtagPress = (hashtag: string) => {
