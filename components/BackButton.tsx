@@ -23,9 +23,12 @@ export default function BackButton({
     if (onPress) {
       onPress();
     } else {
-      // Always use fallback URL to ensure proper navigation
-      // This prevents going back to login or other unintended screens
-      router.push(fallbackUrl);
+      // Check if there's history to go back to, otherwise use fallback
+      if (typeof window !== 'undefined' && window.history.length > 1) {
+        router.back();
+      } else {
+        router.push(fallbackUrl);
+      }
     }
   };
 

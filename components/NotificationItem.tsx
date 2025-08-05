@@ -286,6 +286,9 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
   },
+  disabledButton: {
+    opacity: 0.5,
+  },
 });
 
 export default NotificationItem;

@@ -168,10 +168,12 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   unviewedStory: {
-    backgroundColor: colors.primary,
+    borderWidth: 2,
+    borderColor: colors.primary,
   },
   viewedStory: {
-    backgroundColor: colors.gray[300],
+    borderWidth: 2,
+    borderColor: colors.gray[300],
   },
   storyImage: {
     width: 64,

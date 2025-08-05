@@ -12,6 +12,7 @@ interface CollabCardProps {
   onReject: () => void;
   onProfilePress: () => void;
   onFollow?: () => void;
+  isProcessing?: boolean;
 }
 
 const { width, height } = Dimensions.get('window');
@@ -24,6 +25,7 @@ export const CollabCard: React.FC<CollabCardProps> = ({
   onReject,
   onProfilePress,
   onFollow,
+  isProcessing = false,
 }) => {
   // Use a placeholder image if no profile image is available
   const profileImage = profile.profileImage || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60';
@@ -134,24 +136,30 @@ export const CollabCard: React.FC<CollabCardProps> = ({
             <View style={styles.buttonContainer}>
               {/* Reject Button */}
               <TouchableOpacity 
-                style={[styles.overlayButton, styles.rejectButton]} 
-                onPress={onReject}
+                style={[styles.overlayButton, styles.rejectButton, isProcessing && styles.disabledButton]} 
+                onPress={isProcessing ? undefined : onReject}
+                activeOpacity={isProcessing ? 1 : 0.8}
+                disabled={isProcessing}
               >
                 <X size={24} color={colors.white} />
               </TouchableOpacity>
               
               {/* Follow Button */}
               <TouchableOpacity 
-                style={[styles.overlayButton, styles.followButton]} 
-                onPress={onFollow || (() => console.log('Follow pressed'))}
+                style={[styles.overlayButton, styles.followButton, isProcessing && styles.disabledButton]} 
+                onPress={isProcessing ? undefined : (onFollow || (() => console.log('Follow pressed')))}
+                activeOpacity={isProcessing ? 1 : 0.8}
+                disabled={isProcessing}
               >
                 <UserPlus size={24} color={colors.white} />
               </TouchableOpacity>
               
               {/* Accept Button */}
               <TouchableOpacity 
-                style={[styles.overlayButton, styles.acceptButton]} 
-                onPress={onAccept}
+                style={[styles.overlayButton, styles.acceptButton, isProcessing && styles.disabledButton]} 
+                onPress={isProcessing ? undefined : onAccept}
+                activeOpacity={isProcessing ? 1 : 0.8}
+                disabled={isProcessing}
               >
                 <Handshake size={24} color={colors.white} />
               </TouchableOpacity>
@@ -340,6 +348,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 4,
     zIndex: 10,
+  },
+  disabledButton: {
+    opacity: 0.5,
   },
 });
 

@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Post, UserProfile } from '@/types';
 import { colors } from '@/constants/colors';
-import { ThumbsUp, MessageCircle, SquareArrowOutUpRight, Heart, AlarmPlus, AlarmMinus, BadgeCheck, Play, Pause, RotateCcw, FileText, Volume2, Maximize2 } from 'lucide-react-native';
+import { ThumbsUp, MessageCircle, SquareArrowOutUpRight, HeartHandshake, BadgeCheck, Play, Pause, RotateCcw, FileText, Volume2, Maximize2 } from 'lucide-react-native';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -60,7 +60,7 @@ const PostCard: React.FC<PostCardProps> = ({
   const confettiScale = useSharedValue(0);
   
   // Handle double tap like with enhanced animation and confetti effect
-  const handleDoubleTapLike = () => {
+  const handleDoubleTapLike = React.useCallback(() => {
     if (!isLiked) {
       onLike();
     }
@@ -83,7 +83,7 @@ const PostCard: React.FC<PostCardProps> = ({
       withSpring(2, { duration: 500 }),
       withTiming(0, { duration: 200 })
     );
-  };
+  }, [isLiked, onLike, doubleTapScale, confettiScale]);
   
   // Double tap gesture - always initialize
   const doubleTap = Gesture.Tap()
@@ -548,11 +548,11 @@ const PostCard: React.FC<PostCardProps> = ({
         <View style={{ flex: 1 }} />
         
         <TouchableOpacity style={styles.actionButton} onPress={onSave}>
-          {isSaved ? (
-            <AlarmMinus size={24} color={colors.primary} fill={colors.primary} />
-          ) : (
-            <AlarmPlus size={24} color={colors.gray[500]} />
-          )}
+          <HeartHandshake 
+            size={24} 
+            color={isSaved ? colors.primary : colors.gray[500]} 
+            fill={isSaved ? colors.primary : 'none'} 
+          />
         </TouchableOpacity>
       </View>
     </View>
