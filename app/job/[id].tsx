@@ -26,7 +26,7 @@ export default function JobDetailScreen() {
         
         {/* Custom Header with Back Button */}
         <View style={styles.customHeader}>
-          <BackButton fallbackUrl="/(tabs)/jobs" />
+          <BackButton fallbackUrl="/jobs" />
           <Text style={styles.customHeaderTitle}>Job Not Found</Text>
           <View style={styles.headerSpacer} />
         </View>
@@ -81,7 +81,7 @@ export default function JobDetailScreen() {
       
       {/* Custom Header with Back Button */}
       <View style={styles.customHeader}>
-        <BackButton fallbackUrl="/(tabs)/jobs" />
+        <BackButton fallbackUrl="/jobs" />
         <Text style={styles.customHeaderTitle}>{job.title}</Text>
         <View style={styles.headerSpacer} />
       </View>

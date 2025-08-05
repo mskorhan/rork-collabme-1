@@ -38,10 +38,7 @@ export default function MessagesScreen() {
     ).length;
   };
 
-  const handleBackPress = () => {
-    // Always go back to the home tab
-    router.push('/');
-  };
+
 
   const renderTabButton = (tab: TabType, title: string) => (
     <TouchableOpacity
@@ -166,7 +163,7 @@ export default function MessagesScreen() {
       
       {/* Header with back button */}
       <View style={styles.header}>
-        <BackButton onPress={handleBackPress} />
+        <BackButton fallbackUrl="/" />
         <Text style={styles.headerTitle}>Messages</Text>
       </View>
       

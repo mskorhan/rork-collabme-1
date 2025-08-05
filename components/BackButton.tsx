@@ -1,12 +1,12 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { colors } from '@/constants/colors';
 
 interface BackButtonProps {
   onPress?: () => void;
-  fallbackUrl?: string;
+  fallbackUrl?: '/' | '/search' | '/collab' | '/jobs' | '/activity' | '/profile' | '/messages';
   color?: string;
   size?: number;
   style?: any;
@@ -23,22 +23,9 @@ export default function BackButton({
     if (onPress) {
       onPress();
     } else {
-      // Check if we can go back in history
-      if (Platform.OS === 'web') {
-        if (window.history.length > 1) {
-          router.back();
-        } else {
-          router.push(fallbackUrl as any);
-        }
-      } else {
-        // On mobile, always try to go back first
-        // If there's no history, use fallback
-        try {
-          router.back();
-        } catch {
-          router.push(fallbackUrl as any);
-        }
-      }
+      // Always use fallback URL to ensure proper navigation
+      // This prevents going back to login or other unintended screens
+      router.push(fallbackUrl);
     }
   };
 

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, TextInput, TouchableOpacity, Text, Image, Platform, Alert } from 'react-native';
-import { Stack, useLocalSearchParams, router } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { Send, Smile, Plus, Phone, Video, Info, Image as ImageIcon, File, Mic, Camera } from 'lucide-react-native';
 import BackButton from '@/components/BackButton';
@@ -42,7 +42,7 @@ export default function ConversationScreen() {
           }} 
         />
         <View style={styles.header}>
-          <BackButton onPress={() => router.replace('/messages')} />
+          <BackButton fallbackUrl="/messages" />
           <Text style={styles.headerTitle}>Conversation not found</Text>
         </View>
       </View>
