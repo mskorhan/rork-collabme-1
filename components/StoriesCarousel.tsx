@@ -126,10 +126,13 @@ const styles = StyleSheet.create({
   },
   addStoryImageContainer: {
     position: 'relative',
-    width: 64,
-    height: 64,
-    borderRadius: 32,
+    width: 68,
+    height: 68,
+    borderRadius: 34,
     marginBottom: 4,
+    borderWidth: 2,
+    borderColor: colors.gray[300],
+    padding: 2,
   },
   addStoryImage: {
     width: 64,
@@ -138,8 +141,8 @@ const styles = StyleSheet.create({
   },
   addButton: {
     position: 'absolute',
-    bottom: 0,
-    right: 0,
+    bottom: 2,
+    right: 2,
     width: 20,
     height: 20,
     borderRadius: 10,
@@ -179,8 +182,6 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    borderWidth: 2,
-    borderColor: colors.white,
   },
   verificationBadge: {
     position: 'absolute',
