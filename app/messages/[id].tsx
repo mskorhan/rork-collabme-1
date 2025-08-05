@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, StyleSheet, ScrollView, TextInput, TouchableOpacity, Text, Image, Platform, Alert } from 'react-native';
 import { Stack, useLocalSearchParams, router } from 'expo-router';
 import { colors } from '@/constants/colors';
-import { ArrowLeft, Send, Smile, Plus, Phone, Video, Info, Image as ImageIcon, File, Mic, Camera } from 'lucide-react-native';
+import { Send, Smile, Plus, Phone, Video, Info, Image as ImageIcon, File, Mic, Camera } from 'lucide-react-native';
+import BackButton from '@/components/BackButton';
 import { mockConversations, mockMessages } from '@/mocks/conversations';
 import { mockUsers } from '@/mocks/users';
 
@@ -11,7 +12,24 @@ export default function ConversationScreen() {
   const [messageText, setMessageText] = useState('');
   const [quickReactions] = useState(['👍', '❤️', '😂', '😮', '😢', '😡']);
   const [showAttachmentOptions, setShowAttachmentOptions] = useState(false);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const scrollViewRef = useRef<ScrollView>(null);
+  
+  // Clear previous messages and fetch new ones when conversationId changes
+  useEffect(() => {
+    if (id) {
+      setIsLoading(true);
+      setMessages([]); // Clear previous messages
+      
+      // Simulate API call to fetch messages
+      setTimeout(() => {
+        const conversationMessages = mockMessages.filter(m => m.conversationId === id);
+        setMessages(conversationMessages);
+        setIsLoading(false);
+      }, 300);
+    }
+  }, [id]);
   
   const conversation = mockConversations.find(c => c.id === id);
   if (!conversation) {
@@ -24,9 +42,7 @@ export default function ConversationScreen() {
           }} 
         />
         <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.replace('/messages')} style={styles.backButton}>
-            <ArrowLeft size={24} color={colors.text} />
-          </TouchableOpacity>
+          <BackButton onPress={() => router.replace('/messages')} />
           <Text style={styles.headerTitle}>Conversation not found</Text>
         </View>
       </View>
@@ -34,7 +50,6 @@ export default function ConversationScreen() {
   }
 
   const otherUser = getOtherUserInConversation(id, '1');
-  const conversationMessages = mockMessages.filter(m => m.conversationId === id);
 
   function getOtherUserInConversation(conversationId: string, currentUserId: string) {
     const conversation = mockConversations.find(c => c.id === conversationId);
@@ -78,12 +93,7 @@ export default function ConversationScreen() {
       
       {/* Message Header */}
       <View style={styles.messageHeader}>
-        <TouchableOpacity 
-          onPress={() => router.back()}
-          style={styles.headerBackButton}
-        >
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
+        <BackButton onPress={() => router.back()} style={styles.headerBackButton} />
         
         <View style={styles.headerUserInfo}>
           <Image 
@@ -119,22 +129,32 @@ export default function ConversationScreen() {
         contentContainerStyle={styles.messagesContent}
         showsVerticalScrollIndicator={false}
       >
-        {conversationMessages.map((message, index) => {
-          const isOwnMessage = message.senderId === '1';
-          const prevMessage = conversationMessages[index - 1];
-          const showAvatar = !isOwnMessage && (!prevMessage || prevMessage.senderId !== message.senderId);
-          const showTimestamp = index === conversationMessages.length - 1 || 
-            (conversationMessages[index + 1] && 
-             conversationMessages[index + 1].createdAt - message.createdAt > 300000); // 5 minutes
+        {isLoading ? (
+          <View style={styles.loadingContainer}>
+            <Text style={styles.loadingText}>Loading messages...</Text>
+          </View>
+        ) : messages.length === 0 ? (
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>No messages yet</Text>
+            <Text style={styles.emptySubtext}>Start the conversation!</Text>
+          </View>
+        ) : (
+          messages.map((message, index) => {
+            const isOwnMessage = message.senderId === '1';
+            const prevMessage = messages[index - 1];
+            const showAvatar = !isOwnMessage && (!prevMessage || prevMessage.senderId !== message.senderId);
+            const showTimestamp = index === messages.length - 1 || 
+              (messages[index + 1] && 
+               messages[index + 1].createdAt - message.createdAt > 300000); // 5 minutes
           
-          return (
-            <View 
-              key={message.id}
-              style={[
-                styles.messageItem,
-                isOwnMessage ? styles.ownMessage : styles.otherMessage
-              ]}
-            >
+            return (
+              <View 
+                key={message.id}
+                style={[
+                  styles.messageItem,
+                  isOwnMessage ? styles.ownMessage : styles.otherMessage
+                ]}
+              >
               {!isOwnMessage && (
                 <View style={styles.avatarContainer}>
                   {showAvatar ? (
@@ -173,10 +193,11 @@ export default function ConversationScreen() {
                     })}
                   </Text>
                 )}
+                </View>
               </View>
-            </View>
-          );
-        })}
+            );
+          })
+        )}
       </ScrollView>
 
       {/* Quick Reactions */}
@@ -579,5 +600,31 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.text,
     fontWeight: '500',
+  },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+  },
+  loadingText: {
+    fontSize: 16,
+    color: colors.gray[500],
+  },
+  emptyContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 40,
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 8,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: colors.gray[500],
   },
 });

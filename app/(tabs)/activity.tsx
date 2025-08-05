@@ -236,11 +236,11 @@ export default function ActivityScreen() {
                     break;
                   case 'message':
                     // Navigate to messages inbox
-                    router.push('/messages/index');
+                    router.push('/messages');
                     break;
                   case 'collab_request':
                     // Navigate to collab requests page (inbox)
-                    router.push('/messages/index?tab=collab');
+                    router.push('/messages?tab=collab');
                     break;
                   case 'job_application':
                     // Navigate to job details page, not user profile

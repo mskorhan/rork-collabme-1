@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, FlatList, TouchableOpacity, Text, Platform, Image } from 'react-native';
+import { View, StyleSheet, FlatList, TouchableOpacity, Text, Platform } from 'react-native';
 import { Stack, router, useLocalSearchParams } from 'expo-router';
 import { colors } from '@/constants/colors';
-import { ArrowLeft } from 'lucide-react-native';
+import BackButton from '@/components/BackButton';
 import ConversationItem from '@/components/ConversationItem';
 import CollabRequestItem from '@/components/CollabRequestItem';
 import { mockConversations, mockMessages } from '@/mocks/conversations';
@@ -166,9 +166,7 @@ export default function MessagesScreen() {
       
       {/* Header with back button */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
-          <ArrowLeft size={24} color={colors.text} />
-        </TouchableOpacity>
+        <BackButton onPress={handleBackPress} />
         <Text style={styles.headerTitle}>Messages</Text>
       </View>
       
