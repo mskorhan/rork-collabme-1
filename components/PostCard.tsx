@@ -50,7 +50,7 @@ const PostCard: React.FC<PostCardProps> = ({
   const [duration, setDuration] = useState(180); // 3 minutes default
   const lastTapRef = useRef(0); // For web double tap detection
   
-  // Animation values
+  // Animation values - always initialize at top level
   const likeScale = useSharedValue(1);
   const likeRotation = useSharedValue(0);
   const likeOpacity = useSharedValue(1);
@@ -58,6 +58,59 @@ const PostCard: React.FC<PostCardProps> = ({
   const heartScale = useSharedValue(0);
   const heartOpacity = useSharedValue(0);
   const confettiScale = useSharedValue(0);
+  
+  // Double tap gesture - always initialize
+  const doubleTap = Gesture.Tap()
+    .numberOfTaps(2)
+    .onEnd(() => {
+      runOnJS(handleDoubleTapLike)();
+    });
+
+  // Animated styles - always initialize at top level
+  const likeButtonStyle = useAnimatedStyle(() => {
+    const rotateZ = `${likeRotation.value}deg`;
+    
+    return {
+      transform: [
+        { scale: likeScale.value },
+        { rotateZ }
+      ],
+      opacity: likeOpacity.value,
+    };
+  });
+
+  const doubleTapAnimationStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      doubleTapScale.value,
+      [0, 0.5, 1, 1.5, 2],
+      [0, 0.8, 1, 0.8, 0],
+      Extrapolate.CLAMP
+    );
+    
+    return {
+      transform: [{ scale: doubleTapScale.value }],
+      opacity,
+    };
+  });
+
+  const heartAnimationStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: heartScale.value }],
+    opacity: heartOpacity.value,
+  }));
+
+  const confettiAnimationStyle = useAnimatedStyle(() => {
+    const opacity = interpolate(
+      confettiScale.value,
+      [0, 0.5, 1, 2],
+      [0, 1, 0.8, 0],
+      Extrapolate.CLAMP
+    );
+    
+    return {
+      transform: [{ scale: confettiScale.value }],
+      opacity,
+    };
+  });
   
   // If user is not found, show a fallback
   if (!user) {
@@ -209,58 +262,7 @@ const PostCard: React.FC<PostCardProps> = ({
     setIsPlaying(true);
   };
 
-  // Double tap gesture
-  const doubleTap = Gesture.Tap()
-    .numberOfTaps(2)
-    .onEnd(() => {
-      runOnJS(handleDoubleTapLike)();
-    });
 
-  // Animated styles
-  const likeButtonStyle = useAnimatedStyle(() => {
-    const rotateZ = `${likeRotation.value}deg`;
-    
-    return {
-      transform: [
-        { scale: likeScale.value },
-        { rotateZ }
-      ],
-      opacity: likeOpacity.value,
-    };
-  });
-
-  const doubleTapAnimationStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      doubleTapScale.value,
-      [0, 0.5, 1, 1.5, 2],
-      [0, 0.8, 1, 0.8, 0],
-      Extrapolate.CLAMP
-    );
-    
-    return {
-      transform: [{ scale: doubleTapScale.value }],
-      opacity,
-    };
-  });
-
-  const heartAnimationStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: heartScale.value }],
-    opacity: heartOpacity.value,
-  }));
-
-  const confettiAnimationStyle = useAnimatedStyle(() => {
-    const opacity = interpolate(
-      confettiScale.value,
-      [0, 0.5, 1, 2],
-      [0, 1, 0.8, 0],
-      Extrapolate.CLAMP
-    );
-    
-    return {
-      transform: [{ scale: confettiScale.value }],
-      opacity,
-    };
-  });
 
   const renderContent = () => {
     switch (post.type) {
