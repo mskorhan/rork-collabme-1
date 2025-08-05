@@ -6,7 +6,7 @@ import { colors } from '@/constants/colors';
 
 interface BackButtonProps {
   onPress?: () => void;
-  fallbackUrl?: string;
+  fallbackUrl?: '/' | '/(tabs)/' | '/profile' | '/messages' | '/jobs' | '/collab';
   color?: string;
   size?: number;
   style?: any;
@@ -14,7 +14,7 @@ interface BackButtonProps {
 
 export default function BackButton({ 
   onPress, 
-  fallbackUrl = '/',
+  fallbackUrl = '/' as const,
   color = colors.text, 
   size = 24, 
   style 
