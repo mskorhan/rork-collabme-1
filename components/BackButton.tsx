@@ -6,7 +6,7 @@ import { colors } from '@/constants/colors';
 
 interface BackButtonProps {
   onPress?: () => void;
-  fallbackUrl?: '/' | '/profile' | '/messages' | '/jobs' | '/collab';
+  fallbackUrl?: string;
   color?: string;
   size?: number;
   style?: any;
@@ -28,10 +28,16 @@ export default function BackButton({
         if (window.history.length > 1) {
           router.back();
         } else {
-          router.push(fallbackUrl);
+          router.push(fallbackUrl as any);
         }
       } else {
-        router.back();
+        // On mobile, always try to go back first
+        // If there's no history, use fallback
+        try {
+          router.back();
+        } catch {
+          router.push(fallbackUrl as any);
+        }
       }
     }
   };

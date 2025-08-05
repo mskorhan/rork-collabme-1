@@ -93,7 +93,7 @@ export default function ConversationScreen() {
       
       {/* Message Header */}
       <View style={styles.messageHeader}>
-        <BackButton onPress={() => router.back()} style={styles.headerBackButton} />
+        <BackButton fallbackUrl="/messages" style={styles.headerBackButton} />
         
         <View style={styles.headerUserInfo}>
           <Image 
