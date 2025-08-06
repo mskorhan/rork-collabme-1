@@ -19,7 +19,6 @@ export default function HomeScreen() {
   const [refreshing, setRefreshing] = useState(false);
   const [posts, setPosts] = useState<Post[]>(mockPosts);
   const [likedPosts, setLikedPosts] = useState<string[]>([]);
-  const [savedPosts, setSavedPosts] = useState<string[]>([]);
   const [storyViewerVisible, setStoryViewerVisible] = useState(false);
   const [selectedStoryIndex, setSelectedStoryIndex] = useState(0);
   const [viewedStories, setViewedStories] = useState<string[]>([]);
@@ -90,18 +89,7 @@ export default function HomeScreen() {
     }
   }, [currentUserId, likedPosts]);
 
-  const handleSave = useCallback((postId: string) => {
-    try {
-      if (savedPosts.includes(postId)) {
-        setSavedPosts(prevSavedPosts => prevSavedPosts.filter(id => id !== postId));
-      } else {
-        setSavedPosts(prevSavedPosts => [...prevSavedPosts, postId]);
-      }
-    } catch (error) {
-      console.error('Error saving post:', error);
-      Alert.alert('Error', 'Failed to save post. Please try again.');
-    }
-  }, [savedPosts]);
+
 
   const handlePost = useCallback((content: { text: string; type: 'text' | 'photo' | 'video' | 'audio' | 'pdf'; media?: string }) => {
     try {
@@ -397,10 +385,8 @@ export default function HomeScreen() {
               onLike={() => handleLike(item.id)}
               onComment={() => handleComment(item.id)}
               onShare={() => {}}
-              onSave={() => handleSave(item.id)}
               onProfilePress={() => {}}
               isLiked={likedPosts.includes(item.id)}
-              isSaved={savedPosts.includes(item.id)}
               onFullScreen={handleFullScreen}
             />
           );

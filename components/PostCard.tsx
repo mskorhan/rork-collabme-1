@@ -23,12 +23,10 @@ interface PostCardProps {
   onLike: () => void;
   onComment: () => void;
   onShare: () => void;
-  onSave: () => void;
 
   onFullScreen?: (mediaUrl: string, type: 'photo' | 'video') => void;
   onProfilePress: () => void;
   isLiked?: boolean;
-  isSaved?: boolean;
 
 }
 
@@ -40,10 +38,8 @@ const PostCard: React.FC<PostCardProps> = ({
   onLike,
   onComment,
   onShare,
-  onSave,
   onProfilePress,
   isLiked = false,
-  isSaved = false,
   onFullScreen,
 }) => {
   const [showLikeAnimation, setShowLikeAnimation] = useState(false);
@@ -545,16 +541,6 @@ const PostCard: React.FC<PostCardProps> = ({
         
         <TouchableOpacity style={styles.actionButton} onPress={onShare}>
           <SquareArrowOutUpRight size={24} color={colors.gray[500]} />
-        </TouchableOpacity>
-        
-        <View style={{ flex: 1 }} />
-        
-        <TouchableOpacity style={styles.actionButton} onPress={onSave}>
-          <ThumbsUp 
-            size={24} 
-            color={isSaved ? colors.primary : colors.gray[500]}
-            fill={isSaved ? colors.primary : 'none'}
-          />
         </TouchableOpacity>
       </View>
     </View>
