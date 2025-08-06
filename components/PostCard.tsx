@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'rea
 import { Post, UserProfile } from '@/types';
 import { colors } from '@/constants/colors';
 import { ThumbsUp, MessageCircle, SquareArrowOutUpRight, BadgeCheck, Play, Pause, RotateCcw, FileText, Volume2, Maximize2 } from 'lucide-react-native';
+import StarRating from '@/components/StarRating';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -31,6 +32,8 @@ interface PostCardProps {
 }
 
 const { width } = Dimensions.get('window');
+const POST_ASPECT_RATIO = 4 / 5; // 4:5 aspect ratio
+const POST_HEIGHT = width * POST_ASPECT_RATIO;
 
 const PostCard: React.FC<PostCardProps> = ({
   post,
@@ -478,6 +481,14 @@ const PostCard: React.FC<PostCardProps> = ({
           <View>
             <Text style={styles.username}>{user.name}</Text>
             <Text style={styles.userType}>{getUserType()}</Text>
+            {user.rating && (
+              <StarRating 
+                rating={user.rating} 
+                size={12} 
+                showValue={false}
+                style={styles.userRating}
+              />
+            )}
             <Text style={styles.date}>{formatDate(post.createdAt)}</Text>
           </View>
         </TouchableOpacity>
@@ -614,6 +625,10 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.gray[500],
   },
+  userRating: {
+    marginTop: 2,
+    marginBottom: 2,
+  },
   sponsoredTag: {
     backgroundColor: colors.gray[200],
     paddingHorizontal: 8,
@@ -627,13 +642,22 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     position: 'relative',
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginHorizontal: 12,
+    marginBottom: 8,
   },
   postImage: {
     width: '100%',
-    height: width,
+    height: POST_HEIGHT,
+    borderRadius: 12,
   },
   videoContainer: {
     position: 'relative',
+    borderRadius: 12,
+    overflow: 'hidden',
+    marginHorizontal: 12,
+    marginBottom: 8,
   },
   videoOverlay: {
     position: 'absolute',
@@ -876,9 +900,9 @@ const styles = StyleSheet.create({
   },
   pdfPreview: {
     position: 'relative',
-    height: 200,
+    height: POST_HEIGHT,
     marginBottom: 12,
-    borderRadius: 8,
+    borderRadius: 12,
     overflow: 'hidden',
   },
   pdfPreviewImage: {
