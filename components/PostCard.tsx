@@ -32,8 +32,8 @@ interface PostCardProps {
 }
 
 const { width } = Dimensions.get('window');
-const POST_ASPECT_RATIO = 4 / 5; // 4:5 aspect ratio
-const POST_HEIGHT = width * POST_ASPECT_RATIO;
+const POST_ASPECT_RATIO = 5 / 4; // 4:5 aspect ratio (height/width)
+const POST_HEIGHT = (width - 24) * POST_ASPECT_RATIO; // Subtract margins (12px on each side)
 
 const PostCard: React.FC<PostCardProps> = ({
   post,
