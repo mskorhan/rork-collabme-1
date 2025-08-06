@@ -469,8 +469,8 @@ const PostCard: React.FC<PostCardProps> = ({
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.profileSection}>
-          <TouchableOpacity style={styles.userInfo} onPress={() => router.push(`/profile/${user.id}`)}>
+        <TouchableOpacity style={styles.userInfo} onPress={() => router.push(`/profile/${user.id}`)}>
+          <View style={styles.profileWithRating}>
             <View style={styles.profileImageContainer}>
               <Image source={{ uri: profileImage }} style={styles.profileImage} />
               {user.isVerified && (
@@ -479,24 +479,23 @@ const PostCard: React.FC<PostCardProps> = ({
                 </View>
               )}
             </View>
-            <View>
-              <Text style={styles.username}>{user.name}</Text>
-              <Text style={styles.userType}>{getUserType()}</Text>
-              <Text style={styles.date}>{formatDate(post.createdAt)}</Text>
-            </View>
-          </TouchableOpacity>
-          {user.rating && (
-            <View style={styles.ratingContainer}>
-              <StarRating 
-                rating={user.rating} 
-                size={14} 
-                showValue={true}
-                style={styles.userRating}
-                textStyle={styles.ratingTextStyle}
-              />
-            </View>
-          )}
-        </View>
+            {user.rating && (
+              <View style={styles.ratingUnderProfile}>
+                <StarRating 
+                  rating={user.rating} 
+                  size={10} 
+                  showValue={true}
+                  style={styles.userRating}
+                  textStyle={styles.ratingTextStyle}
+                />
+              </View>
+            )}
+          </View>
+          <View style={styles.userDetails}>
+            <Text style={styles.username}>{user.name}</Text>
+            <Text style={styles.userType}>{getUserType()}</Text>
+          </View>
+        </TouchableOpacity>
         
         {/* Sponsored tag for ads */}
         {(post as any).isSponsored && (
@@ -508,6 +507,11 @@ const PostCard: React.FC<PostCardProps> = ({
       
       {/* Content */}
       {renderContent()}
+      
+      {/* Date */}
+      <View style={styles.dateContainer}>
+        <Text style={styles.postDate}>{formatDate(post.createdAt)}</Text>
+      </View>
       
       {/* Caption */}
       {post.description && (
@@ -592,17 +596,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 12,
   },
-  profileSection: {
+  profileWithRating: {
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  userDetails: {
     flex: 1,
   },
   userInfo: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: 8,
   },
   profileImageContainer: {
     position: 'relative',
-    marginRight: 12,
+    marginBottom: 2,
   },
   profileImage: {
     width: 40,
@@ -634,17 +642,25 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.gray[500],
   },
-  ratingContainer: {
-    paddingLeft: 52,
+  ratingUnderProfile: {
+    alignItems: 'center',
   },
   userRating: {
     alignSelf: 'flex-start',
   },
   ratingTextStyle: {
-    fontSize: 12,
+    fontSize: 9,
     fontWeight: '600',
     color: colors.gray[600],
-    marginLeft: 4,
+    marginLeft: 1,
+  },
+  dateContainer: {
+    paddingHorizontal: 12,
+    paddingBottom: 4,
+  },
+  postDate: {
+    fontSize: 12,
+    color: colors.gray[500],
   },
   sponsoredTag: {
     backgroundColor: colors.gray[200],
