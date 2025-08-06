@@ -397,10 +397,8 @@ export default function HomeScreen() {
               onLike={() => handleLike(item.id)}
               onComment={() => handleComment(item.id)}
               onShare={() => {}}
-              onSave={() => handleSave(item.id)}
               onProfilePress={() => {}}
               isLiked={likedPosts.includes(item.id)}
-              isSaved={savedPosts.includes(item.id)}
               onFullScreen={handleFullScreen}
             />
           );
