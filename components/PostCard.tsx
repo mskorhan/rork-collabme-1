@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Post, UserProfile } from '@/types';
 import { colors } from '@/constants/colors';
-import { ThumbsUp, MessageCircle, SquareArrowOutUpRight, AlarmPlus, AlarmMinus, BadgeCheck, Play, Pause, RotateCcw, FileText, Volume2, Maximize2 } from 'lucide-react-native';
+import { ThumbsUp, MessageCircle, SquareArrowOutUpRight, AlarmPlus, AlarmMinus, BadgeCheck, Play, Pause, RotateCcw, FileText, Volume2, Maximize2, AlarmPlus, AlarmMinus } from 'lucide-react-native';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -24,10 +24,12 @@ interface PostCardProps {
   onComment: () => void;
   onShare: () => void;
   onSave: () => void;
+  onFavorite?: () => void;
   onFullScreen?: (mediaUrl: string, type: 'photo' | 'video') => void;
   onProfilePress: () => void;
   isLiked?: boolean;
   isSaved?: boolean;
+  isFavorited?: boolean;
 }
 
 const { width } = Dimensions.get('window');
@@ -42,7 +44,9 @@ const PostCard: React.FC<PostCardProps> = ({
   onProfilePress,
   isLiked = false,
   isSaved = false,
+  isFavorited = false,
   onFullScreen,
+  onFavorite,
 }) => {
   const [showLikeAnimation, setShowLikeAnimation] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -560,6 +564,22 @@ const PostCard: React.FC<PostCardProps> = ({
             />
           )}
         </TouchableOpacity>
+        
+        {onFavorite && (
+          <TouchableOpacity style={styles.actionButton} onPress={onFavorite}>
+            {isFavorited ? (
+              <AlarmMinus 
+                size={24} 
+                color={colors.primary} 
+              />
+            ) : (
+              <AlarmPlus 
+                size={24} 
+                color={colors.gray[500]} 
+              />
+            )}
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
