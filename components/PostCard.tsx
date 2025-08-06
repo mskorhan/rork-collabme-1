@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'react-native';
 import { Post, UserProfile } from '@/types';
 import { colors } from '@/constants/colors';
-import { ThumbsUp, MessageCircle, SquareArrowOutUpRight, HeartHandshake, BadgeCheck, Play, Pause, RotateCcw, FileText, Volume2, Maximize2 } from 'lucide-react-native';
+import { ThumbsUp, MessageCircle, SquareArrowOutUpRight, AlarmPlus, AlarmMinus, BadgeCheck, Play, Pause, RotateCcw, FileText, Volume2, Maximize2 } from 'lucide-react-native';
 import Animated, { 
   useSharedValue, 
   useAnimatedStyle, 
@@ -548,11 +548,17 @@ const PostCard: React.FC<PostCardProps> = ({
         <View style={{ flex: 1 }} />
         
         <TouchableOpacity style={styles.actionButton} onPress={onSave}>
-          <HeartHandshake 
-            size={24} 
-            color={isSaved ? colors.primary : colors.gray[500]} 
-            fill={isSaved ? colors.primary : 'none'} 
-          />
+          {isSaved ? (
+            <AlarmMinus 
+              size={24} 
+              color={colors.primary} 
+            />
+          ) : (
+            <AlarmPlus 
+              size={24} 
+              color={colors.gray[500]} 
+            />
+          )}
         </TouchableOpacity>
       </View>
     </View>
