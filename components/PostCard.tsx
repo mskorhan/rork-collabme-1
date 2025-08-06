@@ -470,29 +470,27 @@ const PostCard: React.FC<PostCardProps> = ({
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.userInfo} onPress={() => router.push(`/profile/${user.id}`)}>
-          <View style={styles.profileWithRating}>
-            <View style={styles.profileImageContainer}>
-              <Image source={{ uri: profileImage }} style={styles.profileImage} />
-              {user.isVerified && (
-                <View style={styles.verificationBadge}>
-                  <BadgeCheck size={16} color={colors.verified} fill="none" />
-                </View>
-              )}
-            </View>
-            {user.rating && (
-              <View style={styles.ratingUnderProfile}>
-                <StarRating 
-                  rating={user.rating} 
-                  size={10} 
-                  showValue={true}
-                  style={styles.userRating}
-                  textStyle={styles.ratingTextStyle}
-                />
+          <View style={styles.profileImageContainer}>
+            <Image source={{ uri: profileImage }} style={styles.profileImage} />
+            {user.isVerified && (
+              <View style={styles.verificationBadge}>
+                <BadgeCheck size={16} color={colors.verified} fill="none" />
               </View>
             )}
           </View>
           <View style={styles.userDetails}>
-            <Text style={styles.username}>{user.name}</Text>
+            <View style={styles.nameAndRating}>
+              <Text style={styles.username}>{user.name}</Text>
+              {user.rating && (
+                <StarRating 
+                  rating={user.rating} 
+                  size={12} 
+                  showValue={true}
+                  style={styles.userRating}
+                  textStyle={styles.ratingTextStyle}
+                />
+              )}
+            </View>
             <Text style={styles.userType}>{getUserType()}</Text>
           </View>
         </TouchableOpacity>
@@ -594,37 +592,40 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-start',
     justifyContent: 'space-between',
-    padding: 12,
-  },
-  profileWithRating: {
-    alignItems: 'center',
-    marginRight: 12,
+    paddingHorizontal: 12,
+    paddingTop: 12,
+    paddingBottom: 8,
   },
   userDetails: {
     flex: 1,
+    justifyContent: 'center',
   },
   userInfo: {
     flexDirection: 'row',
-    alignItems: 'flex-start',
-    marginBottom: 8,
+    alignItems: 'center',
   },
   profileImageContainer: {
     position: 'relative',
-    marginBottom: 2,
+    marginRight: 12,
   },
   profileImage: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+  },
+  nameAndRating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 2,
   },
   verificationBadge: {
     position: 'absolute',
     bottom: -2,
     right: -2,
     backgroundColor: colors.white,
-    borderRadius: 10,
-    width: 20,
-    height: 20,
+    borderRadius: 12,
+    width: 24,
+    height: 24,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -632,9 +633,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
+    marginRight: 8,
   },
   userType: {
-    fontSize: 12,
+    fontSize: 14,
     color: colors.primary,
     fontWeight: '500',
   },
@@ -642,17 +644,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.gray[500],
   },
-  ratingUnderProfile: {
-    alignItems: 'center',
-  },
   userRating: {
     alignSelf: 'flex-start',
   },
   ratingTextStyle: {
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '600',
     color: colors.gray[600],
-    marginLeft: 1,
+    marginLeft: 4,
   },
   dateContainer: {
     paddingHorizontal: 12,
