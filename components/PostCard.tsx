@@ -469,29 +469,34 @@ const PostCard: React.FC<PostCardProps> = ({
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity style={styles.userInfo} onPress={() => router.push(`/profile/${user.id}`)}>
-          <View style={styles.profileImageContainer}>
-            <Image source={{ uri: profileImage }} style={styles.profileImage} />
-            {user.isVerified && (
-              <View style={styles.verificationBadge}>
-                <BadgeCheck size={16} color={colors.verified} fill="none" />
-              </View>
-            )}
-          </View>
-          <View>
-            <Text style={styles.username}>{user.name}</Text>
-            <Text style={styles.userType}>{getUserType()}</Text>
-            {user.rating && (
+        <View style={styles.profileSection}>
+          <TouchableOpacity style={styles.userInfo} onPress={() => router.push(`/profile/${user.id}`)}>
+            <View style={styles.profileImageContainer}>
+              <Image source={{ uri: profileImage }} style={styles.profileImage} />
+              {user.isVerified && (
+                <View style={styles.verificationBadge}>
+                  <BadgeCheck size={16} color={colors.verified} fill="none" />
+                </View>
+              )}
+            </View>
+            <View>
+              <Text style={styles.username}>{user.name}</Text>
+              <Text style={styles.userType}>{getUserType()}</Text>
+              <Text style={styles.date}>{formatDate(post.createdAt)}</Text>
+            </View>
+          </TouchableOpacity>
+          {user.rating && (
+            <View style={styles.ratingContainer}>
               <StarRating 
                 rating={user.rating} 
-                size={12} 
+                size={14} 
                 showValue={true}
                 style={styles.userRating}
+                textStyle={styles.ratingTextStyle}
               />
-            )}
-            <Text style={styles.date}>{formatDate(post.createdAt)}</Text>
-          </View>
-        </TouchableOpacity>
+            </View>
+          )}
+        </View>
         
         {/* Sponsored tag for ads */}
         {(post as any).isSponsored && (
@@ -583,13 +588,17 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     padding: 12,
+  },
+  profileSection: {
+    flex: 1,
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 8,
   },
   profileImageContainer: {
     position: 'relative',
@@ -625,9 +634,17 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.gray[500],
   },
+  ratingContainer: {
+    paddingLeft: 52,
+  },
   userRating: {
-    marginTop: 2,
-    marginBottom: 2,
+    alignSelf: 'flex-start',
+  },
+  ratingTextStyle: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.gray[600],
+    marginLeft: 4,
   },
   sponsoredTag: {
     backgroundColor: colors.gray[200],

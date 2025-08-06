@@ -82,7 +82,7 @@ const styles = StyleSheet.create({
   starsContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginRight: 6,
+    marginRight: 4,
   },
   partialStarContainer: {
     position: 'relative',
@@ -100,8 +100,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   ratingText: {
-    marginLeft: 6,
-    fontSize: 14,
+    marginLeft: 4,
+    fontSize: 12,
     fontWeight: '600',
     color: colors.text,
   },
