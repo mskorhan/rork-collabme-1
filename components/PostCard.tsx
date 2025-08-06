@@ -485,7 +485,7 @@ const PostCard: React.FC<PostCardProps> = ({
               <StarRating 
                 rating={user.rating} 
                 size={12} 
-                showValue={false}
+                showValue={true}
                 style={styles.userRating}
               />
             )}
