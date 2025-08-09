@@ -24,8 +24,7 @@ import Animated, {
   withTiming,
   runOnJS,
   withSpring,
-  withSequence,
-  interpolate
+  withSequence
 } from 'react-native-reanimated';
 
 interface StoryViewerProps {
@@ -57,7 +56,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
   
   const progressWidth = useSharedValue(0);
   const replyBoxTranslateY = useSharedValue(200);
-  const emojiScale = useSharedValue(1);
+
   const heartScale = useSharedValue(1);
   const thumbsUpScale = useSharedValue(1);
   const laughScale = useSharedValue(1);
@@ -66,7 +65,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
   const surpriseScale = useSharedValue(1);
   
   const textInputRef = useRef<TextInput>(null);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   
   // Get unique users with stories
   const usersWithStories = getUsersWithStories();
@@ -86,7 +85,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
       setCurrentUserIndex(Math.max(0, userIndex));
       setCurrentStoryIndex(Math.max(0, storyIndex));
     }
-  }, [visible, initialStoryIndex]);
+  }, [visible, initialStoryIndex, stories, usersWithStories]);
   
   useEffect(() => {
     if (!visible || !currentStory || isPaused) return;
@@ -114,7 +113,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
         clearInterval(timerRef.current);
       }
     };
-  }, [visible, currentUserIndex, currentStoryIndex, isPaused]);
+  }, [visible, currentUserIndex, currentStoryIndex, isPaused, currentStory, progressWidth]);
   
   const handleNextStory = () => {
     if (currentStory) {
@@ -186,6 +185,13 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
   const handleSendReply = () => {
     if (!replyText.trim()) return;
     
+    // In a real app, this would send the message to the backend
+    console.log('Story reply sent:', {
+      storyId: currentStory.id,
+      userId: currentUser?.id,
+      message: replyText.trim()
+    });
+    
     Alert.alert('Reply Sent!', `Your reply "${replyText}" has been sent to ${currentUser?.name}`);
     handleCloseReply();
   };
@@ -201,37 +207,42 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
     Alert.alert('Reaction Sent!', `You reacted with ${emoji} to ${currentUser?.name}'s story`);
   };
   
-  const progressStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+  // Animated styles - always define them to avoid conditional hook calls
+  const progressStyle = useAnimatedStyle(() => ({
     width: `${progressWidth.value}%`,
-  })) : { width: `${progress}%` };
+  }));
   
-  const replyBoxStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+  const replyBoxStyle = useAnimatedStyle(() => ({
     transform: [{ translateY: replyBoxTranslateY.value }],
-  })) : { transform: [{ translateY: isReplying ? 0 : 200 }] };
+  }));
   
-  const heartAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+  const heartAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: heartScale.value }],
-  })) : {};
+  }));
   
-  const thumbsUpAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+  const thumbsUpAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: thumbsUpScale.value }],
-  })) : {};
+  }));
   
-  const laughAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+  const laughAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: laughScale.value }],
-  })) : {};
+  }));
   
-  const angryAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+  const angryAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: angryScale.value }],
-  })) : {};
+  }));
   
-  const sadAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+  const sadAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: sadScale.value }],
-  })) : {};
+  }));
   
-  const surpriseAnimatedStyle = Platform.OS !== 'web' ? useAnimatedStyle(() => ({
+  const surpriseAnimatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: surpriseScale.value }],
-  })) : {};
+  }));
+  
+  // Fallback styles for web
+  const webProgressStyle = { width: `${progress}%` };
+  const webReplyBoxStyle = { transform: [{ translateY: isReplying ? 0 : 200 }] };
   
   if (!visible || !currentStory || !currentUser) {
     return null;
@@ -261,7 +272,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
                   Platform.OS !== 'web' ? (
                     <Animated.View style={[styles.progressBar, progressStyle]} />
                   ) : (
-                    <View style={[styles.progressBar, progressStyle]} />
+                    <View style={[styles.progressBar, webProgressStyle]} />
                   )
                 )}
                 {index < currentStoryIndex && (
@@ -339,10 +350,12 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
         </SafeAreaView>
         
         {/* Reply Interface */}
-        <KeyboardAvoidingView 
-          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={styles.replyContainer}
-        >
+        {isReplying && (
+          <KeyboardAvoidingView 
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={styles.replyContainer}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+          >
           {Platform.OS !== 'web' ? (
             <Animated.View style={[styles.replyBox, replyBoxStyle]}>
               {/* Quick Emoji Reactions */}
@@ -417,7 +430,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
               </View>
             </Animated.View>
           ) : (
-            <View style={[styles.replyBox, { transform: [{ translateY: isReplying ? 0 : 200 }] }]}>
+            <View style={[styles.replyBox, webReplyBoxStyle]}>
               {/* Web fallback - same content without animations */}
               <View style={styles.emojiContainer}>
                 <TouchableOpacity style={styles.emojiButton} onPress={() => handleEmojiReaction('❤️', heartScale)}>
@@ -472,7 +485,8 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
               </View>
             </View>
           )}
-        </KeyboardAvoidingView>
+          </KeyboardAvoidingView>
+        )}
       </View>
     </Modal>
   );
@@ -614,13 +628,14 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
+    zIndex: 1000,
   },
   replyBox: {
     backgroundColor: colors.white,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     paddingTop: 20,
-    paddingBottom: 40,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 20,
     paddingHorizontal: 20,
     shadowColor: '#000',
     shadowOffset: {

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, TextInput, TouchableOpacity, Text, Image, Platform, Alert } from 'react-native';
+import { View, StyleSheet, ScrollView, TextInput, TouchableOpacity, Text, Image, Platform, Alert, KeyboardAvoidingView } from 'react-native';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { Send, Smile, Plus, Phone, Video, Info, Image as ImageIcon, File, Mic, Camera } from 'lucide-react-native';
@@ -61,14 +61,26 @@ export default function ConversationScreen() {
 
   const handleSendMessage = () => {
     if (messageText.trim()) {
-      // In a real app, send the message
-      console.log('Sending message:', messageText);
+      // Create new message
+      const newMessage = {
+        id: Date.now().toString(),
+        conversationId: id,
+        senderId: '1',
+        content: messageText.trim(),
+        createdAt: Date.now(),
+        type: 'text' as const
+      };
+      
+      // Add message to state
+      setMessages(prev => [...prev, newMessage]);
       setMessageText('');
       
-      // Simulate adding a new message
+      // Scroll to bottom
       setTimeout(() => {
         scrollViewRef.current?.scrollToEnd({ animated: true });
       }, 100);
+      
+      console.log('Message sent:', newMessage.content);
     }
   };
   
@@ -83,7 +95,11 @@ export default function ConversationScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <KeyboardAvoidingView 
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
       <Stack.Screen 
         options={{ 
           headerShown: false,
@@ -297,7 +313,7 @@ export default function ConversationScreen() {
           <Send size={18} color={messageText.trim() ? colors.white : colors.gray[400]} />
         </TouchableOpacity>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -505,7 +521,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     paddingHorizontal: 16,
     paddingVertical: 12,
-    paddingBottom: Platform.OS === 'ios' ? 40 : 20,
+    paddingBottom: Platform.OS === 'ios' ? 34 : 16,
     backgroundColor: colors.white,
     borderTopWidth: 1,
     borderTopColor: colors.gray[100],

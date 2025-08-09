@@ -43,7 +43,7 @@ const CategoryTabs: React.FC<CategoryTabsProps> = ({
               {IconComponent && (
                 <IconComponent 
                   size={18} 
-                  color={isSelected ? colors.primary : colors.gray[500]} 
+                  color={isSelected ? colors.white : colors.gray[500]} 
                   style={styles.icon}
                 />
               )}
