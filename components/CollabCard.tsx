@@ -5,6 +5,7 @@ import { UserProfile } from '@/types';
 import { colors } from '@/constants/colors';
 import { MapPin, X, Circle, UserPlus, Star, Handshake, CheckCircle } from 'lucide-react-native';
 import { router } from 'expo-router';
+import { useFollowStore } from '@/store/followStore';
 
 interface CollabCardProps {
   profile: UserProfile;
@@ -27,6 +28,9 @@ export const CollabCard: React.FC<CollabCardProps> = ({
   onFollow,
   isProcessing = false,
 }) => {
+  const { followUser, unfollowUser, isFollowing } = useFollowStore();
+  const isUserFollowing = isFollowing(profile.id);
+  
   // Use a placeholder image if no profile image is available
   const profileImage = profile.profileImage || 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60';
   
@@ -44,6 +48,15 @@ export const CollabCard: React.FC<CollabCardProps> = ({
       default:
         return colors.gray[400];
     }
+  };
+  
+  const handleFollowPress = () => {
+    if (isUserFollowing) {
+      unfollowUser(profile.id);
+    } else {
+      followUser(profile.id);
+    }
+    onFollow?.();
   };
 
 
@@ -87,47 +100,49 @@ export const CollabCard: React.FC<CollabCardProps> = ({
             style={styles.infoOverlay}
           >
             <View style={styles.infoContainer}>
-              <View style={styles.nameRow}>
-                <Text style={styles.name} numberOfLines={1}>{profile.name}</Text>
-                {profile.verified && (
-                  <View style={styles.verifiedBadge}>
-                    <CheckCircle size={14} color={colors.white} />
+              <View style={styles.nameAndRatingRow}>
+                <View style={styles.nameColumn}>
+                  <View style={styles.nameRow}>
+                    <Text style={styles.name} numberOfLines={1}>{profile.name}</Text>
+                    {profile.verified && (
+                      <View style={styles.verifiedBadge}>
+                        <CheckCircle size={16} color={colors.white} />
+                      </View>
+                    )}
                   </View>
+                  
+                  <Text style={styles.role} numberOfLines={1}>
+                    {isCreative ? 
+                      (profile as any).role.split('_').map((word: string) => 
+                        word.charAt(0).toUpperCase() + word.slice(1)
+                      ).join(' ') :
+                      (profile as any).companyType.split('_').map((word: string) => 
+                        word.charAt(0).toUpperCase() + word.slice(1)
+                      ).join(' ')
+                    }
+                  </Text>
+                </View>
+                
+                {/* Rating - Clickable */}
+                {profile.rating && (
+                  <TouchableOpacity 
+                    style={styles.ratingContainer}
+                    onPress={() => router.push(`/profile/reviews?userId=${profile.id}`)}
+                    activeOpacity={0.7}
+                  >
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        size={16}
+                        color="#FFD700"
+                        fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
+                        style={styles.starIcon}
+                      />
+                    ))}
+                    <Text style={styles.ratingText}>{profile.rating.toFixed(1)}</Text>
+                  </TouchableOpacity>
                 )}
               </View>
-              
-              <Text style={styles.role} numberOfLines={1}>
-                {isCreative ? 
-                  (profile as any).role.split('_').map((word: string) => 
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                  ).join(' ') :
-                  (profile as any).companyType.split('_').map((word: string) => 
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                  ).join(' ')
-                }
-              </Text>
-              
-              {/* Rating - Clickable */}
-              {profile.rating && (
-                <TouchableOpacity 
-                  style={styles.ratingContainer}
-                  onPress={() => router.push(`/profile/reviews?userId=${profile.id}`)}
-                  activeOpacity={0.7}
-                >
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <Star
-                      key={star}
-                      size={14}
-                      color="#FFD700"
-                      fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
-                      style={styles.starIcon}
-                    />
-                  ))}
-                  <Text style={styles.ratingText}>{profile.rating.toFixed(1)}</Text>
-                </TouchableOpacity>
-              )}
-              
-
             </View>
           </LinearGradient>
 
@@ -146,8 +161,12 @@ export const CollabCard: React.FC<CollabCardProps> = ({
               
               {/* Follow Button */}
               <TouchableOpacity 
-                style={[styles.overlayButton, styles.followButton, isProcessing && styles.disabledButton]} 
-                onPress={isProcessing ? undefined : (onFollow || (() => console.log('Follow pressed')))}
+                style={[
+                  styles.overlayButton, 
+                  isUserFollowing ? styles.followingButton : styles.followButton, 
+                  isProcessing && styles.disabledButton
+                ]} 
+                onPress={isProcessing ? undefined : handleFollowPress}
                 activeOpacity={isProcessing ? 1 : 0.8}
                 disabled={isProcessing}
               >
@@ -257,21 +276,32 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     padding: 24,
-    paddingBottom: 140,
+    paddingBottom: 160,
+  },
+  nameAndRatingRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    width: '100%',
+  },
+  nameColumn: {
+    flex: 1,
+    marginRight: 16,
   },
   nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   name: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
     color: colors.white,
     marginRight: 8,
     textShadowColor: 'rgba(0, 0, 0, 0.6)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
+    flex: 1,
   },
   verifiedBadge: {
     backgroundColor: colors.primary,
@@ -279,9 +309,9 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   role: {
-    fontSize: 18,
+    fontSize: 20,
     color: colors.gray[100],
-    marginBottom: 12,
+    marginBottom: 16,
     fontWeight: '600',
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
@@ -290,20 +320,19 @@ const styles = StyleSheet.create({
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 12,
-    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    borderRadius: 16,
+    alignSelf: 'flex-end',
   },
   starIcon: {
     marginRight: 1,
   },
   ratingText: {
-    fontSize: 14,
+    fontSize: 16,
     color: colors.white,
-    marginLeft: 6,
+    marginLeft: 8,
     fontWeight: '700',
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
@@ -323,7 +352,7 @@ const styles = StyleSheet.create({
   },
   buttonOverlay: {
     position: 'absolute',
-    bottom: 10,
+    bottom: 20,
     left: 24,
     right: 24,
     borderRadius: 20,
@@ -358,14 +387,17 @@ const styles = StyleSheet.create({
   followButton: {
     backgroundColor: colors.primary,
   },
+  followingButton: {
+    backgroundColor: colors.success,
+  },
   profileButton: {
     position: 'absolute',
-    bottom: 130,
+    bottom: 150,
     right: 24,
     backgroundColor: colors.primary,
     borderRadius: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -374,7 +406,7 @@ const styles = StyleSheet.create({
     zIndex: 10,
   },
   profileButtonText: {
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '700',
     color: colors.white,
     letterSpacing: 0.5,

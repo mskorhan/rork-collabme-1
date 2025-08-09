@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, StyleSheet, Text, Animated, PanResponder, Dimensions, TouchableOpacity, Modal, TextInput, Alert } from 'react-native';
+import { View, StyleSheet, Text, Animated, PanResponder, Dimensions, TouchableOpacity, Modal, TextInput, Alert, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { colors } from '@/constants/colors';
 import { X, Check } from 'lucide-react-native';
@@ -218,55 +218,63 @@ export default function CollabScreen() {
         animationType="slide"
         onRequestClose={handleCollabCancel}
       >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalHeader}>
-              <Text style={styles.modalTitle}>Collaboration Request</Text>
-              <TouchableOpacity onPress={handleCollabCancel} style={styles.closeButton}>
-                <X size={24} color={colors.gray[500]} />
-              </TouchableOpacity>
-            </View>
-            
-            <Text style={styles.modalSubtitle}>
-              Explain why you want to collaborate with {pendingCollabUserId ? mockCreatives.find(u => u.id === pendingCollabUserId)?.name : 'this user'}
-            </Text>
-            
-            <TextInput
-              style={styles.messageInput}
-              placeholder="I would love to collaborate because..."
-              placeholderTextColor={colors.gray[400]}
-              value={collabMessage}
-              onChangeText={setCollabMessage}
-              multiline
-              maxLength={200}
-              textAlignVertical="top"
-            />
-            
-            <View style={styles.characterCount}>
-              <Text style={[
-                styles.characterCountText,
-                collabMessage.length > 200 && styles.characterCountError
-              ]}>
-                {collabMessage.length}/200
+        <KeyboardAvoidingView 
+          style={styles.modalOverlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
+          <ScrollView 
+            contentContainerStyle={styles.modalScrollContainer}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.modalContainer}>
+              <View style={styles.modalHeader}>
+                <Text style={styles.modalTitle}>Collaboration Request</Text>
+                <TouchableOpacity onPress={handleCollabCancel} style={styles.closeButton}>
+                  <X size={24} color={colors.gray[500]} />
+                </TouchableOpacity>
+              </View>
+              
+              <Text style={styles.modalSubtitle}>
+                Explain why you want to collaborate with {pendingCollabUserId ? mockCreatives.find(u => u.id === pendingCollabUserId)?.name : 'this user'}
               </Text>
-            </View>
-            
-            <View style={styles.modalActions}>
-              <Button
-                title="Cancel"
-                onPress={handleCollabCancel}
-                variant="outline"
-                style={styles.modalButton}
+              
+              <TextInput
+                style={styles.messageInput}
+                placeholder="I would love to collaborate because..."
+                placeholderTextColor={colors.gray[400]}
+                value={collabMessage}
+                onChangeText={setCollabMessage}
+                multiline
+                maxLength={200}
+                textAlignVertical="top"
               />
-              <Button
-                title="Send Request"
-                onPress={handleCollabSubmit}
-                style={styles.modalButton}
-                disabled={collabMessage.trim().length === 0}
-              />
+              
+              <View style={styles.characterCount}>
+                <Text style={[
+                  styles.characterCountText,
+                  collabMessage.length > 200 && styles.characterCountError
+                ]}>
+                  {collabMessage.length}/200
+                </Text>
+              </View>
+              
+              <View style={styles.modalActions}>
+                <Button
+                  title="Cancel"
+                  onPress={handleCollabCancel}
+                  variant="outline"
+                  style={styles.modalButton}
+                />
+                <Button
+                  title="Send Request"
+                  onPress={handleCollabSubmit}
+                  style={styles.modalButton}
+                  disabled={collabMessage.trim().length === 0}
+                />
+              </View>
             </View>
-          </View>
-        </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
       </Modal>
     </View>
   );
@@ -315,6 +323,9 @@ const styles = StyleSheet.create({
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalScrollContainer: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
