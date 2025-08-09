@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'rea
 import { LinearGradient } from 'expo-linear-gradient';
 import { UserProfile } from '@/types';
 import { colors } from '@/constants/colors';
-import { MapPin, X, Circle, UserPlus, Star, Handshake, CheckCircle } from 'lucide-react-native';
+import { MapPin, X, Circle, UserPlus, Star, Handshake, CheckCircle, BadgeCheck } from 'lucide-react-native';
 import { router } from 'expo-router';
 import { useFollowStore } from '@/store/followStore';
 
@@ -105,10 +105,37 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                   <View style={styles.nameRow}>
                     <Text style={styles.name} numberOfLines={1}>{profile.name}</Text>
                     {profile.verified && (
-                      <View style={styles.verifiedBadge}>
-                        <CheckCircle size={16} color={colors.white} />
-                      </View>
+                      <BadgeCheck size={18} color="#1DA1F2" style={styles.verifiedIcon} />
                     )}
+                    
+                    {/* Rating - Clickable - Now inline with name */}
+                    {profile.rating && (
+                      <TouchableOpacity 
+                        style={styles.ratingContainer}
+                        onPress={() => router.push(`/profile/reviews?userId=${profile.id}`)}
+                        activeOpacity={0.7}
+                      >
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={star}
+                            size={14}
+                            color="#FFD700"
+                            fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
+                            style={styles.starIcon}
+                          />
+                        ))}
+                        <Text style={styles.ratingText}>{profile.rating.toFixed(1)}</Text>
+                      </TouchableOpacity>
+                    )}
+                    
+                    {/* Profile Button - Now inline with name and rating */}
+                    <TouchableOpacity 
+                      style={styles.profileButton}
+                      onPress={onProfilePress}
+                      activeOpacity={0.8}
+                    >
+                      <Text style={styles.profileButtonText}>PROFILE</Text>
+                    </TouchableOpacity>
                   </View>
                   
                   <Text style={styles.role} numberOfLines={1}>
@@ -122,26 +149,6 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                     }
                   </Text>
                 </View>
-                
-                {/* Rating - Clickable */}
-                {profile.rating && (
-                  <TouchableOpacity 
-                    style={styles.ratingContainer}
-                    onPress={() => router.push(`/profile/reviews?userId=${profile.id}`)}
-                    activeOpacity={0.7}
-                  >
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        size={14}
-                        color="#FFD700"
-                        fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
-                        style={styles.starIcon}
-                      />
-                    ))}
-                    <Text style={styles.ratingText}>{profile.rating.toFixed(1)}</Text>
-                  </TouchableOpacity>
-                )}
               </View>
             </View>
           </LinearGradient>
@@ -189,14 +196,7 @@ export const CollabCard: React.FC<CollabCardProps> = ({
             </View>
           </View>
 
-          {/* Profile Button - Rounded with Text */}
-          <TouchableOpacity 
-            style={styles.profileButton}
-            onPress={onProfilePress}
-            activeOpacity={0.8}
-          >
-            <Text style={styles.profileButtonText}>PROFILE</Text>
-          </TouchableOpacity>
+
         </View>
       </View>
     </View>
@@ -295,21 +295,23 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 4,
+    flexWrap: 'wrap',
   },
   name: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     color: colors.white,
     marginRight: 8,
     textShadowColor: 'rgba(0, 0, 0, 0.6)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
-    flex: 1,
+    maxWidth: '40%',
   },
-  verifiedBadge: {
-    backgroundColor: colors.primary,
-    borderRadius: 10,
-    padding: 2,
+  verifiedIcon: {
+    marginRight: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 2,
   },
   role: {
     fontSize: 14,
@@ -324,11 +326,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 14,
-    alignSelf: 'flex-start',
-    marginTop: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    marginRight: 8,
   },
   starIcon: {
     marginRight: 0.5,
@@ -395,25 +396,21 @@ const styles = StyleSheet.create({
     backgroundColor: colors.success,
   },
   profileButton: {
-    position: 'absolute',
-    bottom: 110,
-    right: 24,
     backgroundColor: colors.primary,
-    borderRadius: 12,
-    paddingHorizontal: 20,
-    paddingVertical: 12,
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 6,
-    zIndex: 10,
+    shadowRadius: 4,
+    elevation: 4,
   },
   profileButtonText: {
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: '700',
     color: colors.white,
-    letterSpacing: 0.5,
+    letterSpacing: 0.3,
   },
   disabledButton: {
     opacity: 0.5,
