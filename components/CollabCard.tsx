@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Dimensions } from 'rea
 import { LinearGradient } from 'expo-linear-gradient';
 import { UserProfile } from '@/types';
 import { colors } from '@/constants/colors';
-import { MapPin, X, User, Circle, UserPlus, Star, Handshake, CheckCircle } from 'lucide-react-native';
+import { MapPin, X, Circle, UserPlus, Star, Handshake, CheckCircle } from 'lucide-react-native';
 import { router } from 'expo-router';
 
 interface CollabCardProps {
@@ -59,7 +59,7 @@ export const CollabCard: React.FC<CollabCardProps> = ({
             resizeMode="cover" 
           />
           
-          {/* Top Row - Online Status */}
+          {/* Top Row - Online Status and Location */}
           <View style={styles.topRow}>
             <View style={styles.onlineStatusContainer}>
               <Circle 
@@ -71,6 +71,13 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                 {profile.onlineStatus === 'online' ? 'Online' : 
                  profile.onlineStatus === 'away' ? 'Away' : 'Offline'}
               </Text>
+              {profile.location && (
+                <>
+                  <Text style={styles.locationSeparator}>•</Text>
+                  <MapPin size={10} color={colors.white} style={styles.locationIcon} />
+                  <Text style={styles.topLocationText}>{profile.location}</Text>
+                </>
+              )}
             </View>
           </View>
 
@@ -120,16 +127,11 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                 </TouchableOpacity>
               )}
               
-              {profile.location && (
-                <View style={styles.locationContainer}>
-                  <MapPin size={12} color={colors.gray[600]} />
-                  <Text style={styles.location}>{profile.location}</Text>
-                </View>
-              )}
+
             </View>
           </LinearGradient>
 
-          {/* Action Buttons Overlay - Moved Lower */}
+          {/* Action Buttons Overlay - Moved Much Lower */}
           <View style={styles.buttonOverlay}>
             <View style={styles.buttonContainer}>
               {/* Reject Button */}
@@ -164,13 +166,13 @@ export const CollabCard: React.FC<CollabCardProps> = ({
             </View>
           </View>
 
-          {/* Profile Button - Bottom Right */}
+          {/* Profile Button - Rounded with Text */}
           <TouchableOpacity 
             style={styles.profileButton}
             onPress={onProfilePress}
             activeOpacity={0.8}
           >
-            <User size={22} color={colors.white} />
+            <Text style={styles.profileButtonText}>PROFILE</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -224,6 +226,20 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 8,
     paddingVertical: 4,
+  },
+  locationSeparator: {
+    fontSize: 10,
+    color: colors.white,
+    marginHorizontal: 6,
+    fontWeight: '600',
+  },
+  locationIcon: {
+    marginRight: 2,
+  },
+  topLocationText: {
+    fontSize: 10,
+    color: colors.white,
+    fontWeight: '600',
   },
   onlineStatusText: {
     fontSize: 11,
@@ -307,7 +323,7 @@ const styles = StyleSheet.create({
   },
   buttonOverlay: {
     position: 'absolute',
-    bottom: 30,
+    bottom: 10,
     left: 24,
     right: 24,
     borderRadius: 20,
@@ -344,17 +360,24 @@ const styles = StyleSheet.create({
   },
   profileButton: {
     position: 'absolute',
-    bottom: 150,
+    bottom: 130,
     right: 24,
     backgroundColor: colors.primary,
-    borderRadius: 28,
-    padding: 14,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 6,
     zIndex: 10,
+  },
+  profileButtonText: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.white,
+    letterSpacing: 0.5,
   },
   disabledButton: {
     opacity: 0.5,
