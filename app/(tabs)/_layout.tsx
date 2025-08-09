@@ -48,6 +48,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
+          tabBarLabel: 'Home',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon focused={focused}>
               <Home size={24} color={focused ? colors.primary : color} />
@@ -58,6 +59,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="search"
         options={{
+          tabBarLabel: 'Search',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon focused={focused}>
               <Search size={24} color={focused ? colors.primary : color} />
@@ -68,6 +70,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="collab"
         options={{
+          tabBarLabel: 'Collab',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon focused={focused}>
               <Handshake size={24} color={focused ? colors.primary : color} />
@@ -78,6 +81,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="jobs"
         options={{
+          tabBarLabel: 'Jobs',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon focused={focused}>
               <Briefcase size={24} color={focused ? colors.primary : color} />
@@ -88,6 +92,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="activity"
         options={{
+          tabBarLabel: 'Activity',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon focused={focused}>
               <TabBadge count={unreadCount}>
@@ -100,6 +105,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="profile"
         options={{
+          tabBarLabel: 'Profile',
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon focused={focused}>
               <User size={24} color={focused ? colors.primary : color} />

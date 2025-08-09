@@ -119,37 +119,38 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                   }
                 </Text>
                 {profile.rating && (
-                  <TouchableOpacity 
-                    style={styles.ratingContainer}
-                    onPress={() => router.push(`/profile/reviews?userId=${profile.id}`)}
-                    activeOpacity={0.7}
-                    accessibilityLabel="open-reviews"
-                    testID="rating-button"
-                  >
-                    {[1, 2, 3, 4, 5].map((star) => (
-                      <Star
-                        key={star}
-                        size={14}
-                        color="#FFD700"
-                        fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
-                        style={styles.starIcon}
-                      />
-                    ))}
-                    <Text style={styles.ratingText}>{profile.rating.toFixed(1)}</Text>
-                  </TouchableOpacity>
+                  <View style={styles.ratingRow}>
+                    <TouchableOpacity 
+                      style={styles.ratingContainer}
+                      onPress={() => router.push(`/profile/reviews?userId=${profile.id}`)}
+                      activeOpacity={0.7}
+                      accessibilityLabel="open-reviews"
+                      testID="rating-button"
+                    >
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <Star
+                          key={star}
+                          size={14}
+                          color="#FFD700"
+                          fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
+                          style={styles.starIcon}
+                        />
+                      ))}
+                      <Text style={styles.ratingText}>{profile.rating.toFixed(1)}</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                      style={styles.profileButtonRight}
+                      onPress={onProfilePress}
+                      activeOpacity={0.8}
+                      accessibilityLabel="open-profile"
+                      testID="profile-button"
+                    >
+                      <Text style={styles.profileButtonText}>PROFILE</Text>
+                    </TouchableOpacity>
+                  </View>
                 )}
               </View>
-
-              {/* Right: profile button */}
-              <TouchableOpacity 
-                style={styles.profileButtonRight}
-                onPress={onProfilePress}
-                activeOpacity={0.8}
-                accessibilityLabel="open-profile"
-                testID="profile-button"
-              >
-                <Text style={styles.profileButtonText}>PROFILE</Text>
-              </TouchableOpacity>
             </View>
           </LinearGradient>
 
@@ -308,7 +309,6 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.6)',
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 4,
-    maxWidth: '40%',
   },
   verifiedIcon: {
     marginRight: 8,
@@ -346,6 +346,11 @@ const styles = StyleSheet.create({
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   locationContainer: {
     flexDirection: 'row',
@@ -409,7 +414,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
-    alignSelf: 'flex-start',
   },
   profileButtonText: {
     fontSize: 12,

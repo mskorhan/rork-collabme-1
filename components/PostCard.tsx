@@ -633,7 +633,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
     color: colors.text,
-    marginRight: 8,
+    marginRight: 6,
+    flexShrink: 1,
   },
   userType: {
     fontSize: 14,
@@ -646,6 +647,7 @@ const styles = StyleSheet.create({
   },
   userRating: {
     alignSelf: 'flex-start',
+    marginTop: 3,
   },
   ratingTextStyle: {
     fontSize: 12,
