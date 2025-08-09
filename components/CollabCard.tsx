@@ -4,7 +4,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { UserProfile } from '@/types';
 import { colors } from '@/constants/colors';
 import { MapPin, X, User, Circle, UserPlus, Star, Handshake, CheckCircle } from 'lucide-react-native';
-import { Platform } from 'react-native';
+import { router } from 'expo-router';
 
 interface CollabCardProps {
   profile: UserProfile;
@@ -16,8 +16,8 @@ interface CollabCardProps {
 }
 
 const { width, height } = Dimensions.get('window');
-const CARD_WIDTH = Math.min(width * 0.9, 380);
-const CARD_HEIGHT = Math.min(height * 0.75, 600);
+const CARD_WIDTH = Math.min(width * 0.95, 420);
+const CARD_HEIGHT = Math.min(height * 0.8, 680);
 
 export const CollabCard: React.FC<CollabCardProps> = ({
   profile,
@@ -46,21 +46,7 @@ export const CollabCard: React.FC<CollabCardProps> = ({
     }
   };
 
-  // Get work status color and text
-  const getWorkStatusInfo = () => {
-    switch (profile.workStatus) {
-      case 'available':
-        return { color: colors.success, text: 'Available for work' };
-      case 'busy':
-        return { color: '#FFA500', text: 'Currently busy' };
-      case 'not_available':
-        return { color: colors.error, text: 'Not available' };
-      default:
-        return { color: colors.gray[400], text: 'Status unknown' };
-    }
-  };
 
-  const workStatusInfo = getWorkStatusInfo();
   
   return (
     <View style={styles.container}>
@@ -114,12 +100,24 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                 }
               </Text>
               
-              {/* Rating */}
+              {/* Rating - Clickable */}
               {profile.rating && (
-                <View style={styles.ratingContainer}>
-                  <Star size={12} color="#FFD700" fill="#FFD700" />
+                <TouchableOpacity 
+                  style={styles.ratingContainer}
+                  onPress={() => router.push(`/profile/reviews?userId=${profile.id}`)}
+                  activeOpacity={0.7}
+                >
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star
+                      key={star}
+                      size={14}
+                      color="#FFD700"
+                      fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
+                      style={styles.starIcon}
+                    />
+                  ))}
                   <Text style={styles.ratingText}>{profile.rating.toFixed(1)}</Text>
-                </View>
+                </TouchableOpacity>
               )}
               
               {profile.location && (
@@ -131,7 +129,7 @@ export const CollabCard: React.FC<CollabCardProps> = ({
             </View>
           </LinearGradient>
 
-          {/* Action Buttons Overlay */}
+          {/* Action Buttons Overlay - Moved Lower */}
           <View style={styles.buttonOverlay}>
             <View style={styles.buttonContainer}>
               {/* Reject Button */}
@@ -141,7 +139,7 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                 activeOpacity={isProcessing ? 1 : 0.8}
                 disabled={isProcessing}
               >
-                <X size={24} color={colors.white} />
+                <X size={28} color={colors.white} />
               </TouchableOpacity>
               
               {/* Follow Button */}
@@ -151,7 +149,7 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                 activeOpacity={isProcessing ? 1 : 0.8}
                 disabled={isProcessing}
               >
-                <UserPlus size={24} color={colors.white} />
+                <UserPlus size={28} color={colors.white} />
               </TouchableOpacity>
               
               {/* Accept Button */}
@@ -161,7 +159,7 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                 activeOpacity={isProcessing ? 1 : 0.8}
                 disabled={isProcessing}
               >
-                <Handshake size={24} color={colors.white} />
+                <Handshake size={28} color={colors.white} />
               </TouchableOpacity>
             </View>
           </View>
@@ -170,8 +168,9 @@ export const CollabCard: React.FC<CollabCardProps> = ({
           <TouchableOpacity 
             style={styles.profileButton}
             onPress={onProfilePress}
+            activeOpacity={0.8}
           >
-            <User size={20} color={colors.white} />
+            <User size={22} color={colors.white} />
           </TouchableOpacity>
         </View>
       </View>
@@ -188,12 +187,12 @@ const styles = StyleSheet.create({
   card: {
     width: '100%',
     backgroundColor: colors.white,
-    borderRadius: 20,
+    borderRadius: 24,
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.15,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.2,
+    shadowRadius: 20,
+    elevation: 12,
     overflow: 'hidden',
   },
   imageContainer: {
@@ -201,7 +200,7 @@ const styles = StyleSheet.create({
     height: CARD_HEIGHT,
     position: 'relative',
     backgroundColor: colors.gray[200],
-    borderRadius: 20,
+    borderRadius: 24,
     overflow: 'hidden',
   },
   image: {
@@ -241,8 +240,8 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   infoContainer: {
-    padding: 20,
-    paddingBottom: 120,
+    padding: 24,
+    paddingBottom: 140,
   },
   nameRow: {
     flexDirection: 'row',
@@ -250,13 +249,13 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   name: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
     color: colors.white,
-    marginRight: 6,
-    textShadowColor: 'rgba(0, 0, 0, 0.5)',
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
+    marginRight: 8,
+    textShadowColor: 'rgba(0, 0, 0, 0.6)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 4,
   },
   verifiedBadge: {
     backgroundColor: colors.primary,
@@ -264,10 +263,10 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   role: {
-    fontSize: 16,
+    fontSize: 18,
     color: colors.gray[100],
-    marginBottom: 8,
-    fontWeight: '500',
+    marginBottom: 12,
+    fontWeight: '600',
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
@@ -275,13 +274,21 @@ const styles = StyleSheet.create({
   ratingContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+  },
+  starIcon: {
+    marginRight: 1,
   },
   ratingText: {
-    fontSize: 12,
+    fontSize: 14,
     color: colors.white,
-    marginLeft: 3,
-    fontWeight: '600',
+    marginLeft: 6,
+    fontWeight: '700',
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 2,
@@ -300,10 +307,10 @@ const styles = StyleSheet.create({
   },
   buttonOverlay: {
     position: 'absolute',
-    bottom: 20,
-    left: 20,
-    right: 20,
-    borderRadius: 16,
+    bottom: 30,
+    left: 24,
+    right: 24,
+    borderRadius: 20,
     overflow: 'hidden',
     backgroundColor: 'transparent',
   },
@@ -311,20 +318,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingVertical: 16,
-    paddingHorizontal: 20,
+    paddingVertical: 20,
+    paddingHorizontal: 24,
   },
   overlayButton: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+    width: 64,
+    height: 64,
+    borderRadius: 32,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
   },
   rejectButton: {
     backgroundColor: colors.error,
@@ -337,16 +344,16 @@ const styles = StyleSheet.create({
   },
   profileButton: {
     position: 'absolute',
-    bottom: 130,
-    right: 20,
+    bottom: 150,
+    right: 24,
     backgroundColor: colors.primary,
-    borderRadius: 24,
-    padding: 12,
+    borderRadius: 28,
+    padding: 14,
     shadowColor: colors.black,
-    shadowOffset: { width: 0, height: 2 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 4,
+    shadowRadius: 6,
+    elevation: 6,
     zIndex: 10,
   },
   disabledButton: {

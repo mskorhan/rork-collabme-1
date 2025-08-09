@@ -82,16 +82,24 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
       const userStories = getStoriesByUser(initialStory.userId);
       const storyIndex = userStories.findIndex(story => story.id === initialStory.id);
       
-      setCurrentUserIndex(Math.max(0, userIndex));
-      setCurrentStoryIndex(Math.max(0, storyIndex));
+      if (userIndex >= 0 && storyIndex >= 0) {
+        setCurrentUserIndex(userIndex);
+        setCurrentStoryIndex(storyIndex);
+      }
     }
-  }, [visible, initialStoryIndex, stories, usersWithStories]);
+  }, [visible, initialStoryIndex]);
   
   useEffect(() => {
     if (!visible || !currentStory || isPaused) return;
     
+    // Reset progress for new story
     setProgress(0);
     progressWidth.value = 0;
+    
+    // Clear any existing timer
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
     
     const timer = setInterval(() => {
       setProgress(prev => {
@@ -111,9 +119,10 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
     return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current);
+        timerRef.current = null;
       }
     };
-  }, [visible, currentUserIndex, currentStoryIndex, isPaused, currentStory, progressWidth]);
+  }, [visible, currentUserIndex, currentStoryIndex, isPaused, currentStory]);
   
   const handleNextStory = () => {
     if (currentStory) {
@@ -122,13 +131,14 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
     
     // Check if there are more stories for current user
     if (currentStoryIndex < currentUserStories.length - 1) {
-      setCurrentStoryIndex(currentStoryIndex + 1);
+      setCurrentStoryIndex(prev => prev + 1);
     } else {
       // Move to next user's stories
       if (currentUserIndex < usersWithStories.length - 1) {
-        setCurrentUserIndex(currentUserIndex + 1);
+        setCurrentUserIndex(prev => prev + 1);
         setCurrentStoryIndex(0);
       } else {
+        // End of all stories - close viewer
         onClose();
       }
     }
@@ -137,7 +147,7 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
   const handlePrevStory = () => {
     // Check if there are previous stories for current user
     if (currentStoryIndex > 0) {
-      setCurrentStoryIndex(currentStoryIndex - 1);
+      setCurrentStoryIndex(prev => prev - 1);
     } else {
       // Move to previous user's stories
       if (currentUserIndex > 0) {
@@ -156,9 +166,15 @@ export const StoryViewer: React.FC<StoryViewerProps> = ({
   // Make sure the close button works properly
   const handleCloseStory = () => {
     console.log('Close button pressed');
+    // Clear timer when closing
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+    }
     setIsReplying(false);
     setReplyText('');
     setIsPaused(false);
+    setProgress(0);
     onClose();
   };
   
