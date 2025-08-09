@@ -133,7 +133,7 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star
                         key={star}
-                        size={16}
+                        size={14}
                         color="#FFD700"
                         fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
                         style={styles.starIcon}
@@ -170,7 +170,11 @@ export const CollabCard: React.FC<CollabCardProps> = ({
                 activeOpacity={isProcessing ? 1 : 0.8}
                 disabled={isProcessing}
               >
-                <UserPlus size={28} color={colors.white} />
+                {isUserFollowing ? (
+                  <CheckCircle size={28} color={colors.white} />
+                ) : (
+                  <UserPlus size={28} color={colors.white} />
+                )}
               </TouchableOpacity>
               
               {/* Accept Button */}
@@ -276,17 +280,16 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     padding: 24,
-    paddingBottom: 160,
+    paddingBottom: 180,
   },
   nameAndRatingRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    flexDirection: 'column',
     alignItems: 'flex-start',
     width: '100%',
   },
   nameColumn: {
-    flex: 1,
-    marginRight: 16,
+    width: '100%',
+    marginBottom: 8,
   },
   nameRow: {
     flexDirection: 'row',
@@ -294,7 +297,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   name: {
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold',
     color: colors.white,
     marginRight: 8,
@@ -309,7 +312,7 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   role: {
-    fontSize: 20,
+    fontSize: 16,
     color: colors.gray[100],
     marginBottom: 16,
     fontWeight: '600',
@@ -321,18 +324,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 16,
-    alignSelf: 'flex-end',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 14,
+    alignSelf: 'flex-start',
+    marginTop: 8,
   },
   starIcon: {
-    marginRight: 1,
+    marginRight: 0.5,
   },
   ratingText: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.white,
-    marginLeft: 8,
+    marginLeft: 6,
     fontWeight: '700',
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
@@ -392,7 +396,7 @@ const styles = StyleSheet.create({
   },
   profileButton: {
     position: 'absolute',
-    bottom: 150,
+    bottom: 120,
     right: 24,
     backgroundColor: colors.primary,
     borderRadius: 12,
