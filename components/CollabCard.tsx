@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     padding: 24,
-    paddingBottom: 180,
+    paddingBottom: 140,
   },
   nameAndRatingRow: {
     flexDirection: 'column',
@@ -289,15 +289,15 @@ const styles = StyleSheet.create({
   },
   nameColumn: {
     width: '100%',
-    marginBottom: 8,
+    marginBottom: 4,
   },
   nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 4,
   },
   name: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: colors.white,
     marginRight: 8,
@@ -312,9 +312,9 @@ const styles = StyleSheet.create({
     padding: 2,
   },
   role: {
-    fontSize: 16,
+    fontSize: 14,
     color: colors.gray[100],
-    marginBottom: 16,
+    marginBottom: 12,
     fontWeight: '600',
     textShadowColor: 'rgba(0, 0, 0, 0.5)',
     textShadowOffset: { width: 0, height: 1 },
@@ -328,7 +328,7 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 14,
     alignSelf: 'flex-start',
-    marginTop: 8,
+    marginTop: 4,
   },
   starIcon: {
     marginRight: 0.5,
@@ -396,7 +396,7 @@ const styles = StyleSheet.create({
   },
   profileButton: {
     position: 'absolute',
-    bottom: 120,
+    bottom: 110,
     right: 24,
     backgroundColor: colors.primary,
     borderRadius: 12,
