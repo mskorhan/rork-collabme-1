@@ -100,56 +100,56 @@ export const CollabCard: React.FC<CollabCardProps> = ({
             style={styles.infoOverlay}
           >
             <View style={styles.infoContainer}>
-              <View style={styles.nameAndRatingRow}>
-                <View style={styles.nameColumn}>
-                  <View style={styles.nameRow}>
-                    <Text style={styles.name} numberOfLines={1}>{profile.name}</Text>
-                    {profile.verified && (
-                      <BadgeCheck size={18} color="#1DA1F2" style={styles.verifiedIcon} />
-                    )}
-                    
-                    {/* Rating - Clickable - Now inline with name */}
-                    {profile.rating && (
-                      <TouchableOpacity 
-                        style={styles.ratingContainer}
-                        onPress={() => router.push(`/profile/reviews?userId=${profile.id}`)}
-                        activeOpacity={0.7}
-                      >
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={star}
-                            size={14}
-                            color="#FFD700"
-                            fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
-                            style={styles.starIcon}
-                          />
-                        ))}
-                        <Text style={styles.ratingText}>{profile.rating.toFixed(1)}</Text>
-                      </TouchableOpacity>
-                    )}
-                    
-                    {/* Profile Button - Now inline with name and rating */}
-                    <TouchableOpacity 
-                      style={styles.profileButton}
-                      onPress={onProfilePress}
-                      activeOpacity={0.8}
-                    >
-                      <Text style={styles.profileButtonText}>PROFILE</Text>
-                    </TouchableOpacity>
-                  </View>
-                  
-                  <Text style={styles.role} numberOfLines={1}>
-                    {isCreative ? 
-                      (profile as any).role.split('_').map((word: string) => 
-                        word.charAt(0).toUpperCase() + word.slice(1)
-                      ).join(' ') :
-                      (profile as any).companyType.split('_').map((word: string) => 
-                        word.charAt(0).toUpperCase() + word.slice(1)
-                      ).join(' ')
-                    }
-                  </Text>
+              {/* Left column: name -> creative type -> stars */}
+              <View style={styles.leftInfoColumn}>
+                <View style={styles.nameRow}>
+                  <Text style={styles.name} numberOfLines={1}>{profile.name}</Text>
+                  {profile.verified && (
+                    <BadgeCheck size={18} color="#1DA1F2" style={styles.verifiedIcon} />
+                  )}
                 </View>
+                <Text style={styles.role} numberOfLines={1}>
+                  {isCreative ? 
+                    (profile as any).role.split('_').map((word: string) => 
+                      word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ') :
+                    (profile as any).companyType.split('_').map((word: string) => 
+                      word.charAt(0).toUpperCase() + word.slice(1)
+                    ).join(' ')
+                  }
+                </Text>
+                {profile.rating && (
+                  <TouchableOpacity 
+                    style={styles.ratingContainer}
+                    onPress={() => router.push(`/profile/reviews?userId=${profile.id}`)}
+                    activeOpacity={0.7}
+                    accessibilityLabel="open-reviews"
+                    testID="rating-button"
+                  >
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        size={14}
+                        color="#FFD700"
+                        fill={star <= Math.round(profile.rating!) ? "#FFD700" : "transparent"}
+                        style={styles.starIcon}
+                      />
+                    ))}
+                    <Text style={styles.ratingText}>{profile.rating.toFixed(1)}</Text>
+                  </TouchableOpacity>
+                )}
               </View>
+
+              {/* Right: profile button */}
+              <TouchableOpacity 
+                style={styles.profileButtonRight}
+                onPress={onProfilePress}
+                activeOpacity={0.8}
+                accessibilityLabel="open-profile"
+                testID="profile-button"
+              >
+                <Text style={styles.profileButtonText}>PROFILE</Text>
+              </TouchableOpacity>
             </View>
           </LinearGradient>
 
@@ -281,15 +281,18 @@ const styles = StyleSheet.create({
   infoContainer: {
     padding: 24,
     paddingBottom: 140,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
   },
   nameAndRatingRow: {
     flexDirection: 'column',
     alignItems: 'flex-start',
     width: '100%',
   },
-  nameColumn: {
-    width: '100%',
-    marginBottom: 4,
+  leftInfoColumn: {
+    flex: 1,
+    marginRight: 12,
   },
   nameRow: {
     flexDirection: 'row',
@@ -329,7 +332,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
-    marginRight: 8,
+    marginTop: 6,
+    alignSelf: 'flex-start',
   },
   starIcon: {
     marginRight: 0.5,
@@ -395,16 +399,17 @@ const styles = StyleSheet.create({
   followingButton: {
     backgroundColor: colors.success,
   },
-  profileButton: {
+  profileButtonRight: {
     backgroundColor: colors.primary,
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    borderRadius: 10,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
     shadowColor: colors.black,
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 4,
+    alignSelf: 'flex-start',
   },
   profileButtonText: {
     fontSize: 12,
